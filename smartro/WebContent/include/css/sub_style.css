@@ -1,0 +1,17 @@
+#gridbox{
+	width:100%;
+	background-color:#FFFFFF;
+	overflow:hidden;
+	z-index:10;
+}
+
+#TOT{
+	color:red;
+	background-color:#fee1e1;
+}
+
+.TOT{
+	color:red;
+	font-weight:bold;
+	background-color:#fee1e1;
+}

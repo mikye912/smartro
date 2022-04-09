@@ -1,0 +1,150 @@
+<?
+session_start();
+include "./include/oci_connect.php";
+include "./include/workspace.php";
+
+$Obj = new WorkSpace;
+$mGetD	 = $Obj->member_get("hans");
+$MenuGet = $Obj->general_menu($mGetD[AUTH_SEQ]);
+
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr"/>
+<head>
+<title>:::Welcome Administrator:::</title>
+<link rel="stylesheet" type="text/css" media="all" href="./include/css/style.css">
+<link type="text/css" rel="stylesheet" href="./include/css/tbck.css" media="all">
+</head>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+	$("ul.subnav").parent().append("<span></span>")
+	$("ul.topnav li a").click(function() {
+		$(this).parent().find("ul.subnav").slideDown('fast').show();
+		$(this).parent().hover(function() {
+		}, function(){	
+			$(this).parent().find("ul.subnav").slideUp('slow');
+		});
+
+		}).hover(function() { 
+			$(this).addClass("subhover");
+		}, function(){
+			$(this).removeClass("subhover");
+	});
+});
+</script>
+<script type="text/javascript">
+	function search_open(){//div 열기
+		document.getElementById('searchbox_on_layer').style.display='';
+		document.getElementById('searchbox_off_layer').style.display='none';
+		document.getElementById('searchbox_close').style.display='';
+		document.getElementById('searchbox_open').style.display='none'; 
+	}
+	
+	function search_close(){//div 닫기
+		document.getElementById('searchbox_on_layer').style.display='none';
+		document.getElementById('searchbox_off_layer').style.display='';
+		document.getElementById('searchbox_close').style.display='none'; 
+		document.getElementById('searchbox_open').style.display='';
+	}
+
+	function data_insert_on(){ 
+		var obj = document.getElementById("data_insert_box"); 
+		obj.style.width = document.body.scrollWidth + 'px'; 
+		obj.style.height = document.body.scrollHeight + 'px'; 
+		obj.style.visibility = "visible"; 
+	}
+
+	function date_insert_off(){
+		var obj = document.getElementById("data_insert_box"); 
+		obj.style.visibility = "hidden"; 
+	}
+</script>
+<link type="text/css" rel="stylesheet" href="./include/css/dhtmlgoodies_calendar.css" media="screen">
+<SCRIPT type="text/javascript" src="./include/js/dhtmlgoodies_calendar.js"></script>
+<script src="./dhtmlx/dhtmlx.js" type="text/javascript" charset="euckr"></script>
+<script src="./dhtmlx/dhtmlxdataprocessor.js" type="text/javascript" charset="euckr"></script>
+<script src="./include/js/connector.js" type="text/javascript" charset="euckr"></script>
+<link rel="stylesheet" href="./dhtmlx/dhtmlx.css" type="text/css" charset="euckr">
+<body>
+<div id="a_1" style="z-index:1;">
+	<div  style="color:red;"><img src="./images/ajax-loader.gif"></div>
+</div>
+<div id='sub_head'>
+	<div class="sub_top">
+		<div class="sub_logo"><img src="./images/logo.jpg"></div>
+		<div class="sub_welcome"><div style="padding-top:25px;"><span style="color:#999933; font-weight:bold;"><?=$mGetD[USER_NAME]?></span>님 반갑습니다.</div></div>
+	</div>
+	<div class="sub_menu_bar">
+		<table width="100%" class="tb00_none">
+			<tr>
+				<td width="50%">
+				<ul class="topnav">  
+				    <li>
+						<a href="#">기초정보관리</a>
+						<ul class="subnav">
+							<li><a href="sub01_01.html">매장조회</a></li>
+							<li><a href="sub01_02.html">카드수수료조회</a></li>
+						</ul>
+					</li> 
+				    <li>  
+				        <a href="#">가맹점 POS데이터</a>
+				        <ul class="subnav">  
+				            <li><a href="sub02_01.html">전체승인조회</a></li>  
+				            <li><a href="sub02_02.html">카드사별승인반송조회</a></li>  
+							<li><a href="sub02_03.html">매장별조회</a></li>
+							<li><a href="sub02_04.html">당월거래차월입금</a></li>
+							<li><a href="sub02_05.html">월일자정산</a></li>
+							<li><a href="sub02_06.html">반송사유조회</a></li>
+							<li><a href="sub02_07.html">대사조회</a></li>
+				        </ul>  
+				    </li>  
+				    <li>  
+				        <a href="#">VAN 승인데이터</a>
+				        <ul class="subnav">  
+				            <li><a href="sub03_01.html">전체승인조회</a></li>  
+				            <li><a href="sub03_02.html">카드사별 승인반송 조회</a></li>  
+							<li><a href="sub03_03.html">매장별조회</a></li>
+							<li><a href="sub03_04.html">당월거래차월입금</a></li>
+							<li><a href="sub03_05.html">월일자정산</a></li>
+				        </ul>  
+				    </li>  
+					<li>  
+				        <a href="#">결산</a>
+				        <ul class="subnav">  
+							<li><a href="sub04_01.html">결산대상조회</a></li>
+				            <li><a href="sub04_02.html">회계일자입금조회</a></li>  
+				            <li><a href="sub04_03.html">매장별입금조회</a></li>  
+							<li><a href="sub04_04.html">매장별미입금조회</a></li>
+							<li><a href="sub04_05.html">실수수료조회</a></li>
+							<li><a href="sub04_06.html">실수수료월별조회</a></li>
+				        </ul>  
+				    </li> 
+					<li>  
+				        <a href="#">시스템관리</a>
+				        <ul class="subnav">  
+				            <li><a href="sub05_01.html">프로그램관리</a></li>  
+				            <li><a href="sub05_02.html">권한관리</a></li>  
+							<li><a href="sub05_03.html">계정관리</a></li>
+							<li><a href="sub05_04.html">서비스 로그조회</a></li>
+							<li><a href="sub05_05.html">매입사코드</a></li>
+							<li><a href="sub05_06.html">계정접속로그조회</a></li>
+							<li><a href="sub05_07.html">응답/오류코드</a></li>
+							<li><a href="sub05_08.html">코드관리</a></li>
+							<li><a href="sub05_09.html">공지사항</a></li>
+							<li><a href="sub05_10.html">자주묻는질문</a></li>
+							<li><a href="sub05_11.html">개인정보조회</a></li>
+				        </ul>  
+				    </li> 
+				</ul>
+
+				</td>
+				<td width="51"><img src="/images/sub/ck_gnb_02.jpg"></td>
+				<td class="menu_bar_right"><a href="sub01_01.html">메인페이지</a></td>
+				<td class="menu_bar_right"><a href="sub05_11.html">정보변경</a></td>
+				<td class="menu_bar_right"><a href="index.html">로그아웃</a></td>
+			</tr>
+		</table>
+	</div>
+</div>

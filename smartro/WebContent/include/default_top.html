@@ -1,0 +1,67 @@
+<?PHP
+header('Content-Type:text/html; charset=utf8');
+require_once 'default_setup_inc.php';
+
+$mGetD[0]['USER_NM'] = isset($mGetD[0]['USER_NM']) ? $mGetD[0]['USER_NM'] : '';
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=utf8"/>
+<head>
+<title>:::Welcome Administrator:::</title>
+
+<link type="text/css" rel="stylesheet" href="./include/css/style.css"  media="all" >
+<link type="text/css" rel="stylesheet" href="./include/css/dhtmlgoodies_calendar.css" media="screen">
+
+<link rel="STYLESHEET" type="text/css" href="./dhtmlx/dhtmlxTabbar/codebase/dhtmlxtabbar.css">
+<script src="./include/js/jquery-1.8.1.min.js" type="text/javascript"></script>
+<script src="./include/js/dhtmlgoodies_calendar.js" type="text/javascript" ></script>
+
+<link rel="stylesheet" type="text/css" href="./dhtmlx/dhtmlxGrid/codebase/dhtmlxgrid.css">
+<link rel="stylesheet" type="text/css" href="./dhtmlx/dhtmlxGrid/codebase/skins/dhtmlxgrid_dhx_skyblue.css">
+
+<script src="./dhtmlx/dhtmlx.js"></script>
+
+<script src="./dhtmlx/dhtmlxTabbar/codebase/dhtmlxcommon.js"></script>
+<script src="./dhtmlx/dhtmlxTabbar/codebase/dhtmlxtabbar.js"></script>
+
+<script src="./dhtmlx/dhtmlxGrid/codebase/dhtmlxgrid.js"></script>
+<script src="./dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_srnd.js"></script>
+<script src="./dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_filter.js"></script>
+<script src="./dhtmlx/dhtmlxGrid/codebase/dhtmlxgridcell.js"></script>
+<script src="./dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_mcol.js"></script>
+<script src="./dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_export.js"></script>
+<script src="./dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_splt.js"></script>
+<script src="./dhtmlx/dhtmlxTabbar/codebase/dhtmlxcontainer.js"></script>
+<script src="./dhtmlx/dhtmlxDataProcessor/codebase/dhtmlxdataprocessor.js"></script>
+
+<script src="./include/js/common.js"></script>
+</head>
+
+<body>
+<div id='sub_head'>
+	<div class="sub_top">
+		<div class="sub_logo"><img src="./images/logo.jpg"></div>
+		<div class="sub_welcome"><div style="padding-top:25px;"><span style="color:#999933; font-weight:bold;"><?=$mGetD[0]['USER_NM']?></span>님 반갑습니다.</div></div>
+	</div>
+	<div class="sub_menu_bar">
+		<table width="100%" class="tb00_none">
+			<tr>
+				<td width="50%">
+				<ul class="topnav">  
+				    <?=$MenuGet?>
+				</ul>
+				</td>
+				<td width="51"><img src="/images/sub/ck_gnb_02.jpg"></td>
+				<td class="menu_bar_right"><a href="sub01_01.html"><span style="color:#ffffff;">메인페이지</span></a></td>
+				<td class="menu_bar_right"><a href="sub05_11.html"><span style="color:#ffffff;">정보변경</span></a></td>
+				<td class="menu_bar_right"><a href="logout.html"><span style="color:#ffffff;">로그아웃</span></a></td>
+			</tr>
+		</table>
+	</div>
+</div>
+<!--div id="text_box" style="position:absolute; z-index:300; width:100%; height:100%; background-color:#000000; left:0; top:0;">
+	<div id="loadmsg">
+	<span style="font-size:20pt;">데이터를 로드중입니다.<br>잠시만 기다려 주십시오.</span>
+	</div>
+</div--> 
