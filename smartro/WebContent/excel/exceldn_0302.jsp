@@ -154,13 +154,13 @@
 		<td class=extxt>단말기명</td>
 		<td class=extxt>단말기번호</td>
 		<td class=extxt>비씨</td>
-		<td class=extxt>농협</td>
 		<td class=extxt>국민</td>
-		<td class=extxt>삼성</td>
 		<td class=extxt>하나</td>
-		<td class=extxt>롯데</td>
-		<td class=extxt>현대</td>
+		<td class=extxt>삼성</td>
 		<td class=extxt>신한</td>
+		<td class=extxt>현대</td>
+		<td class=extxt>롯데</td>
+		<td class=extxt>농협</td>
 	</tr>
 	
 	<%for(int i = 0; i<totalAry.size(); i++){

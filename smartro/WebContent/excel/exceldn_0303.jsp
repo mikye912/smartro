@@ -55,7 +55,7 @@
 	JSONArray itemAry = (JSONArray) itemObj.get("rows");
 	
 	response.setHeader("Content-Type", "application/vnd.ms-xls");
-	response.setHeader("Content-Disposition", "inline; filename=excel0302_"+setDate.format(nowTime)+".xls");
+	response.setHeader("Content-Disposition", "inline; filename=excel0303_"+setDate.format(nowTime)+".xls");
 %>
 
 <!DOCTYPE HTML>
@@ -141,7 +141,7 @@
 </head>
 <table  style='border-collapse:collapse;table-layout:fixed;width:270pt'>
 	<tr style='mso-height-source:userset;height:20.95pt'>
-		<td class=extxt style='font-size:12pt; font-weight:bold; border-top:none;border-left:none' colspan="5">□ 청구일자별조회</td>
+		<td class=extxt style='font-size:12pt; font-weight:bold; border-top:none;border-left:none' colspan="5">□ 거래일자별조회</td>
 	</TR>
 </table>
 <TABLE><TR><TD HEIGHT="10"></TD></TR></TABLE>
@@ -154,13 +154,13 @@
 		<td class=extxt>단말기명</td>
 		<td class=extxt>단말기번호</td>
 		<td class=extxt>비씨</td>
-		<td class=extxt>농협</td>
 		<td class=extxt>국민</td>
-		<td class=extxt>삼성</td>
 		<td class=extxt>하나</td>
-		<td class=extxt>롯데</td>
-		<td class=extxt>현대</td>
+		<td class=extxt>삼성</td>
 		<td class=extxt>신한</td>
+		<td class=extxt>현대</td>
+		<td class=extxt>롯데</td>
+		<td class=extxt>농협</td>
 	</tr>
 	<%
 	for(int i = 0; i<totalAry.size(); i++){

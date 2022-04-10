@@ -240,9 +240,9 @@
 	AccLayout.cells("a").hideHeader();
 	AccLayout.cells("b").hideHeader();
 	totalGrid = AccLayout.cells("a").attachGrid();
-	var tfields  = "순번,단말기명,단말기번호,비씨,농협";
-		tfields += ",국민,삼성,하나,롯데,현대";
-		tfields += ",신한";
+	var tfields  = "순번,단말기명,단말기번호,비씨,국민";
+		tfields += ",하나,삼성,신한,현대,롯데";
+		tfields += ",농협";
 
     var taligns	 = "center,left,left,right,right";
 		taligns += ",right,right,right,right,right";
@@ -378,6 +378,14 @@
 		$("#exceldn").submit();
 	}
 
+	function afterload_prog01(){
+		AccLayout.items[0].progressOff();
+	}
+	
+	function afterload_prog02(){
+		AccLayout.items[1].progressOff();
+	}
+	
 	function search_go(){
 		AccLayout.items[0].progressOn();
 		AccLayout.items[1].progressOn();
@@ -388,17 +396,11 @@
 			accountGrid.enableSmartRendering(false);
 		}
 		
-		totalGrid.clearAndLoad("./ifou_xml_was/total_0302_detail.jsp?"+glb_where(), afterload_prog01(), "json");	
-		accountGrid.clearAndLoad("./ifou_xml_was/item_0302_detail.jsp?"+glb_where(), afterload_prog02(), "json");
+		totalGrid.clearAndLoad("./ifou_xml_was/total_0302_detail.jsp?"+glb_where(), afterload_prog01, "json");	
+		accountGrid.clearAndLoad("./ifou_xml_was/item_0302_detail.jsp?"+glb_where(), afterload_prog02, "json");
 	}
 	
-	function afterload_prog01(){
-		AccLayout.items[0].progressOff();
-	}
 	
-	function afterload_prog02(){
-		AccLayout.items[1].progressOff();
-	}
 	
 	//2021.03.01 0303_detail excel download
 	function acc_exceldn(){

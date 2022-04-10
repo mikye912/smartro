@@ -395,7 +395,7 @@
 
 		AccLayout.items[0].progressOn();
 		AccLayout.items[1].progressOn();
-		totalGrid.clearAndLoad("./ifou_xml_was/total_0303.jsp?"+glb_where(), afterload_prog01 "json");	
+		totalGrid.clearAndLoad("./ifou_xml_was/total_0303.jsp?"+glb_where(), afterload_prog01, "json");	
 		accountGrid.clearAndLoad("./ifou_xml_was/item_0303.jsp?"+glb_where(), afterload_prog02, "json");
 	}
 	

@@ -14,5 +14,11 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="C:/Users/USER-PC/Desktop/KMK/lib/ojdbc6-11.2.0.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/USER-PC/Desktop/KMK/lib/cos.jar"/>
+	<classpathentry kind="lib" path="C:/Users/USER-PC/Desktop/KMK/lib/db2jcc4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/USER-PC/Desktop/KMK/lib/json_simple-1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/USER-PC/Desktop/KMK/lib/poi-ooxml-3.11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/USER-PC/Desktop/KMK/lib/poi-ooxml-schemas-3.11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/USER-PC/Desktop/KMK/lib/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

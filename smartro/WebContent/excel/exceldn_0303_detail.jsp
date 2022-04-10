@@ -155,65 +155,67 @@
 		<td class=extxt style='border-top:none;border-left:none'>단말기명</td>
 		<td class=extxt style='border-top:none;border-left:none'>단말기번호</td>
 		<td class=extxt style='border-top:none;border-left:none'>비씨</td>
-		<td class=extxt style='border-top:none;border-left:none'>농협</td>
 		<td class=extxt style='border-top:none;border-left:none'>국민</td>
-		<td class=extxt style='border-top:none;border-left:none'>삼성</td>
 		<td class=extxt style='border-top:none;border-left:none'>하나</td>
-		<td class=extxt style='border-top:none;border-left:none'>롯데</td>
-		<td class=extxt style='border-top:none;border-left:none'>현대</td>
+		<td class=extxt style='border-top:none;border-left:none'>삼성</td>
 		<td class=extxt style='border-top:none;border-left:none'>신한</td>
+		<td class=extxt style='border-top:none;border-left:none'>현대</td>
+		<td class=extxt style='border-top:none;border-left:none'>롯데</td>
+		<td class=extxt style='border-top:none;border-left:none'>농협</td>
 	</TR>
 	<%
-		for (int i = 0; i<totalAry.size(); i++){
-			JSONObject totalObject = (JSONObject) totalAry.get(i);
-			JSONArray totalData = (JSONArray) totalObject.get("data");
-			if(totalData.get(0).equals("합계")){
+	int total_icnt = 0, total_iban = 0, total_iamt = 0, total_ifee = 0, total_iexp = 0;
+	for(int i = 0; i<totalAry.size(); i++){
+		JSONObject totalObject = (JSONObject) totalAry.get(i);
+		//DEP_NM, MID, PUR_NM, I_CNT, I_BAN, I_AMT, I_FEE, I_EXP
+		JSONArray totalDataAry = (JSONArray) totalObject.get("data");
+		if(i != totalAry.size()) {
 	%>
-			<tr style='mso-height-source:userset;height:15.95pt'>
-				<td class=extxt style='border-top:none;border-left:none;text-align:center;' colspan="3"><%=totalData.get(0)%></td>	
-				<td class=exnum style='border-top:none;border-left:none'><%=totalData.get(3)%></td>
-				<td class=exnum style='border-top:none;border-left:none'><%=totalData.get(4)%></td>
-				<td class=exnum style='border-top:none;border-left:none'><%=totalData.get(5)%></td>
-				<td class=exnum style='border-top:none;border-left:none'><%=totalData.get(6)%></td>
-				<td class=exnum style='border-top:none;border-left:none'><%=totalData.get(7)%></td>
-				<td class=exnum style='border-top:none;border-left:none'><%=totalData.get(8)%></td>
-				<td class=exnum style='border-top:none;border-left:none'><%=totalData.get(9)%></td>
-				<td class=exnum style='border-top:none;border-left:none'><%=totalData.get(10)%></td>
-			</TR>
-	<%			
-			}else{
-				%>
-				<tr style='mso-height-source:userset;height:15.95pt'>
-					<td class=extxt style='border-top:none;border-left:none'><%=totalData.get(0)%></td>	
-					<td class=extxt style='border-top:none;border-left:none'><%=totalData.get(1)%></td>
-					<td class=extxt style='border-top:none;border-left:none'><%=totalData.get(2)%></td>
-					<td class=exnum style='border-top:none;border-left:none'><%=totalData.get(3)%></td>
-					<td class=exnum style='border-top:none;border-left:none'><%=totalData.get(4)%></td>
-					<td class=exnum style='border-top:none;border-left:none'><%=totalData.get(5)%></td>
-					<td class=exnum style='border-top:none;border-left:none'><%=totalData.get(6)%></td>
-					<td class=exnum style='border-top:none;border-left:none'><%=totalData.get(7)%></td>
-					<td class=exnum style='border-top:none;border-left:none'><%=totalData.get(8)%></td>
-					<td class=exnum style='border-top:none;border-left:none'><%=totalData.get(9)%></td>
-					<td class=exnum style='border-top:none;border-left:none'><%=totalData.get(10)%></td>
-				</TR>
-	<% } 
-	}%>
-</table>
+	<tr style='mso-height-source:userset;height:15.95pt'>
+		<td class=extxt style='border-top:none;border-left:none'><%=totalDataAry.get(0)%></td>	
+		<td class=extxt style='border-top:none;border-left:none'><%=totalDataAry.get(1)%></td>
+		<td class=extxt style='border-top:none;border-left:none'><%=totalDataAry.get(2)%></td>
+		<td class=exnum style='border-top:none;border-left:none'><%=totalDataAry.get(3)%></td>
+		<td class=exnum style='border-top:none;border-left:none'><%=totalDataAry.get(4)%></td>
+		<td class=exnum style='border-top:none;border-left:none'><%=totalDataAry.get(5)%></td>
+		<td class=exnum style='border-top:none;border-left:none'><%=totalDataAry.get(6)%></td>
+		<td class=exnum style='border-top:none;border-left:none'><%=totalDataAry.get(7)%></td>
+		<td class=exnum style='border-top:none;border-left:none'><%=totalDataAry.get(8)%></td>
+		<td class=exnum style='border-top:none;border-left:none'><%=totalDataAry.get(9)%></td>
+		<td class=exnum style='border-top:none;border-left:none'><%=totalDataAry.get(10)%></td>
+	</TR>
+	<% } else { %>
+	<tr style='mso-height-source:userset;height:15.95pt'>
+		<td class=extxt style='border-top:none;border-left:none' COLSPAN="3">합계</td>	
+		<td class=exnum style='border-top:none;border-left:none'><%=totalDataAry.get(3)%></td>
+		<td class=exnum style='border-top:none;border-left:none'><%=totalDataAry.get(4)%></td>
+		<td class=exnum style='border-top:none;border-left:none'><%=totalDataAry.get(5)%></td>
+		<td class=exnum style='border-top:none;border-left:none'><%=totalDataAry.get(6)%></td>
+		<td class=exnum style='border-top:none;border-left:none'><%=totalDataAry.get(7)%></td>
+		<td class=exnum style='border-top:none;border-left:none'><%=totalDataAry.get(8)%></td>
+		<td class=exnum style='border-top:none;border-left:none'><%=totalDataAry.get(9)%></td>
+		<td class=exnum style='border-top:none;border-left:none'><%=totalDataAry.get(10)%></td>
+	</TR>
+	<%	
+			} 
+		} 
+	%>
+</TABLE>
 <TABLE>
 <TR><TD></TD></TR>
 </TABLE>
 <table  style='border-collapse:collapse;table-layout:fixed;width:270pt'>
 	<tr style='mso-height-source:userset;height:15.95pt'>
-		<td class=extxt style='border-top:none;border-left:none;border-right:none;' COLSPAN="22">□ 상세내역</td>
+		<td class=extxt style='border-top:none;border-left:none;border-right:none;' COLSPAN="22">□ 거래일자상세내역</td>
 	</TR>
 	<tr style='mso-height-source:userset;height:15.95pt'>
 		<td class=extxt style='border-top:none;border-left:none'>순번</td>
-		<td class=extxt style='border-top:none;border-left:none'>사업부</td>
+		<td class=extxt style='border-top:none;border-left:none'>사업부명</td>
 		<td class=extxt style='border-top:none;border-left:none'>단말기명</td>
 		<td class=extxt style='border-top:none;border-left:none'>단말기번호</td>
 		<td class=extxt style='border-top:none;border-left:none'>카드사</td>
 		<td class=extxt style='border-top:none;border-left:none'>가맹점번호</td>
-		<td class=extxt style='border-top:none;border-left:none'>매입구분</td>
+		<td class=extxt style='border-top:none;border-left:none'>매출구분</td>
 		<td class=extxt style='border-top:none;border-left:none'>승인구분</td>
 		<td class=extxt style='border-top:none;border-left:none'>카드번호</td>
 		<td class=extxt style='border-top:none;border-left:none'>금액</td>
@@ -230,27 +232,23 @@
 		<td class=extxt style='border-top:none;border-left:none'>입금예정일</td>
 		<td class=extxt style='border-top:none;border-left:none'>입반내역</td>
 	</tr>
-	<%
-		//합계
-		long total_amount = 0, total_fee = 0, total_exp = 0;
-	
-		for(int i = 0; i < itemAry.size(); i++){
+<%
+	long item_total_iamt = 0, item_total_ifee = 0, item_total_iexp = 0;
+	for(int i = 0; i < itemAry.size(); i++){
 		JSONObject itemObject = (JSONObject) itemAry.get(i);
 		JSONArray itemDataAry = (JSONArray) itemObject.get("data");
 		
-		if(!itemDataAry.get(0).toString().equals("<font color='#A0522D'><strong>합계</strong></font>")){	
-			total_amount += Long.parseLong(itemDataAry.get(9).toString());
-			total_fee += Integer.parseInt(itemDataAry.get(15).toString());
-			total_exp += Long.parseLong(itemDataAry.get(16).toString());
-			
-			String compareTid = "";
-			if(i < (itemAry.size()-1)){
-				JSONObject comObject = (JSONObject) itemAry.get(i+1);
-				JSONArray comData =  (JSONArray) comObject.get("data");
-				compareTid = comData.get(2).toString();
-			}
-		
-	%>
+		String appgb = itemDataAry.get(7).toString();
+		if(appgb.equals("승인")){
+			item_total_iamt += Long.parseLong(itemDataAry.get(9).toString());
+			item_total_ifee += Long.parseLong(itemDataAry.get(15).toString());
+			item_total_iexp += Long.parseLong(itemDataAry.get(16).toString());
+		}else{
+			item_total_iamt -= Long.parseLong(itemDataAry.get(9).toString());
+			item_total_ifee -= Long.parseLong(itemDataAry.get(15).toString());
+			item_total_iexp -= Long.parseLong(itemDataAry.get(16).toString());
+		}
+%>
 	<tr style='mso-height-source:userset;height:15.95pt'>
 		<td class='extxt' style='border-top:none;border-left:none'><%=itemDataAry.get(0)%></td>
 		<td class='extxt' style='border-top:none;border-left:none'><%=itemDataAry.get(1)%></td>
@@ -261,9 +259,7 @@
 		<td class='extxt' style='border-top:none;border-left:none'><%=itemDataAry.get(6)%></td>
 		<td class='extxt' style='border-top:none;border-left:none'><%=itemDataAry.get(7)%></td>
 		<td class='extxt' style='border-top:none;border-left:none'><%=itemDataAry.get(8)%></td>
-		
 		<td class='exnum' style='border-top:none;border-left:none'><%=itemDataAry.get(9)%></td>
-		
 		<td class='extxt' style='border-top:none;border-left:none'><%=itemDataAry.get(10)%></td>
 		<td class='extxt' style='border-top:none;border-left:none'><%=itemDataAry.get(11)%></td>
 		<td class='extxt' style='border-top:none;border-left:none'><%=itemDataAry.get(12)%></td>
@@ -275,30 +271,24 @@
 		<td class='extxt' style='border-top:none;border-left:none'><%=itemDataAry.get(18)%></td>
 		<td class='extxt' style='border-top:none;border-left:none'><%=itemDataAry.get(19)%></td>
 		<td class='extxt' style='border-top:none;border-left:none'><%=itemDataAry.get(20)%></td>
-		<td class='extxt' style='border-top:none;border-left:none'><%=itemDataAry.get(21)%></td>
+		<td class='extxt' style='border-top:none;border-left:none'><%=itemDataAry.get(21).toString()%></td>
+		
 	</tr>
-	<% }
-	}%>
-	
-	<TR style='mso-height-source:userset;height:15.95pt'>
-		<td class=extxt colspan="4" style="text-align:center;">합계</td>
-		<td class=extxt></td>
-		<td class=extxt></td>
-		<td class=extxt></td>
-		<td class=extxt></td>
-		<td class=extxt></td>
-		<td class=exnum><%=total_amount%></td>
-		<td class=extxt></td>
-		<td class=extxt></td>
-		<td class=extxt></td>
-		<td class=extxt></td>
-		<td class=extxt></td>
-		<td class=exnum><%=total_fee%></td>
-		<td class=exnum><%=total_exp%></td>
-		<td class=extxt></td>
-		<td class=extxt></td>
-		<td class=extxt></td>
-		<td class=extxt></td>
-		<td class=extxt></td>
-	</TR>	
+<% } %>
+	<tr style='mso-height-source:userset;height:15.95pt'>
+		<td class='extxt' style='border-top:none;border-left:none' colspan="9">합계</td>
+		<td class='exnum' style='border-top:none;border-left:none'><%=item_total_iamt %></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='exnum' style='border-top:none;border-left:none'><%=item_total_ifee %></td>
+		<td class='exnum' style='border-top:none;border-left:none'><%=item_total_iexp %></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+	</tr>
 </table>

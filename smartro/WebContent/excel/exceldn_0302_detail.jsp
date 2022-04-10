@@ -140,7 +140,7 @@
 </head>
 <table  style='border-collapse:collapse;table-layout:fixed;width:270pt'>
 	<tr style='mso-height-source:userset;height:20.95pt'>
-		<td class=extxt style='font-size:12pt; font-weight:bold; border-top:none;border-left:none' colspan="7">□ 거래일자상세내역</td>
+		<td class=extxt style='font-size:12pt; font-weight:bold; border-top:none;border-left:none' colspan="7">□ 청구일자별상세조회</td>
 	</TR>
 </table>
 <TABLE><TR><TD HEIGHT="10"></TD></TR></TABLE>
@@ -153,13 +153,13 @@
 		<td class=extxt style='border-top:none;border-left:none'>단말기명</td>
 		<td class=extxt style='border-top:none;border-left:none'>단말기번호</td>
 		<td class=extxt style='border-top:none;border-left:none'>비씨</td>
-		<td class=extxt style='border-top:none;border-left:none'>농협</td>
 		<td class=extxt style='border-top:none;border-left:none'>국민</td>
-		<td class=extxt style='border-top:none;border-left:none'>삼성</td>
 		<td class=extxt style='border-top:none;border-left:none'>하나</td>
-		<td class=extxt style='border-top:none;border-left:none'>롯데</td>
-		<td class=extxt style='border-top:none;border-left:none'>현대</td>
+		<td class=extxt style='border-top:none;border-left:none'>삼성</td>
 		<td class=extxt style='border-top:none;border-left:none'>신한</td>
+		<td class=extxt style='border-top:none;border-left:none'>현대</td>
+		<td class=extxt style='border-top:none;border-left:none'>롯데</td>
+		<td class=extxt style='border-top:none;border-left:none'>농협</td>
 	</TR>
 	<%
 		for (int i = 0; i<totalAry.size(); i++){
@@ -229,9 +229,21 @@
 		<td class=extxt style='border-top:none;border-left:none'>입반내역</td>
 	</tr>
 	<%
+		long item_total_iamt = 0, item_total_ifee = 0, item_total_iexp = 0;
 		for(int i = 0; i < itemAry.size(); i++){
 		JSONObject itemObject = (JSONObject) itemAry.get(i);
 		JSONArray itemDataAry = (JSONArray) itemObject.get("data");
+			
+		String appgb = itemDataAry.get(7).toString();
+		if(appgb.equals("승인")){
+			item_total_iamt += Long.parseLong(itemDataAry.get(9).toString());
+			item_total_ifee += Long.parseLong(itemDataAry.get(15).toString());
+			item_total_iexp += Long.parseLong(itemDataAry.get(16).toString());
+		}else{
+			item_total_iamt -= Long.parseLong(itemDataAry.get(9).toString());
+			item_total_ifee -= Long.parseLong(itemDataAry.get(15).toString());
+			item_total_iexp -= Long.parseLong(itemDataAry.get(16).toString());
+		}
 	%>
 	<tr style='mso-height-source:userset;height:15.95pt'>
 		<td class='extxt' style='border-top:none;border-left:none'><%=itemDataAry.get(0)%></td>
@@ -258,4 +270,20 @@
 		<td class='extxt' style='border-top:none;border-left:none'><%=itemDataAry.get(21)%></td>
 	</tr>
 	<% } %>
+	<tr style='mso-height-source:userset;height:15.95pt'>
+		<td class='extxt' style='border-top:none;border-left:none' colspan="9">합계</td>
+		<td class='exnum' style='border-top:none;border-left:none'><%=item_total_iamt %></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='exnum' style='border-top:none;border-left:none'><%=item_total_ifee %></td>
+		<td class='exnum' style='border-top:none;border-left:none'><%=item_total_iexp %></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+		<td class='extxt' style='border-top:none;border-left:none'></td>
+	</tr>
 </table>

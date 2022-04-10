@@ -82,6 +82,9 @@
 				byId("stime").value = "<%=detail_stime%>";
 				byId("etime").value = "<%=detail_etime%>";
 				byId("mid").value = "<%=detail_mid%>";
+				if(detail_view == "sub03_01_ban"){
+					$("input:checkbox[id='auth01']").prop("checked", true);
+				}
 				search_go();
 			} else {
 				byId("stime").value = "<%=setdate.format(nowTime)%>";
@@ -170,7 +173,7 @@
 				<td>
 					<%=usertid%>
 				</td>
-				<td rowspan="2" align="center"><img src='./images/sch_btn.png' onclick='search_go();' style='cursor:pointer;'></td>
+				<td rowspan="2" align="center"><img src='./images/btn/btn_search.gif' onclick='search_go();' style='cursor:pointer;'></td>
 			</tr>
 			<tr height="36">
 				<td>

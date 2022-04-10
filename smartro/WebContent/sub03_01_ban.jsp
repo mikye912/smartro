@@ -347,11 +347,10 @@
 		var etime	= $('#etime').val();
 		var mid = accountGrid.cellById(rowId, 1).getValue();
 		var seturl = "./sub03_08.jsp?uauth=<%=tuser%>";
-		
 		seturl += "&stime="+stime+"&etime="+etime+"&mid="+mid;
 		seturl += "&detail_view=sub03_01_ban";
 
-		parent.urlgoDirect(-1, "입금상세조회", "sub03_01detail.jsp?"+glb_where()+w);
+		parent.urlgoDirect(-1, "입금상세조회", seturl);
 	}
 
 	function acc_exceldn(){

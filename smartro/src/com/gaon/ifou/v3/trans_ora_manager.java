@@ -88,7 +88,7 @@ public class trans_ora_manager {
 		return con;
 	}
 
-	public void setOraClose(){
+	public void setOraClose(Connection con, PreparedStatement stmt, ResultSet rs){
 		try{
 			if (rs != null){
 				rs.close();
@@ -102,17 +102,13 @@ public class trans_ora_manager {
 				stmt = null;
 			}
 		}catch (Exception e){e.printStackTrace();}
-
-		try{
-			strbuf = null;
-		}catch(Exception e){e.printStackTrace();}
-
+		
 		try {
 			if(con!=null) {con.close();}
 		} catch (Exception e) {e.printStackTrace();}
 	}
 	
-	public void rollBack() {
+	public void rollBack(Connection con) {
 		if(con!=null) 
 		try{
 		    con.rollback();
@@ -120,6 +116,10 @@ public class trans_ora_manager {
 	}
 	
 	public String get_sql_select(String query) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONArray sqlAry = new JSONArray();
 		JSONObject sqlobj = new JSONObject();
 		
@@ -156,15 +156,19 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch (Exception e) {
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
 	}
 	
 	public String get_sql_proc(String qry) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int result = 0;
 		JSONObject sqlobj = new JSONObject();
 		try {
@@ -178,15 +182,18 @@ public class trans_ora_manager {
 			sqlobj.put("count", row);
 		} catch (SQLException e) {
 			sqlobj.put("error", e.toString());
-			setOraClose();
 		}finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
 	}
 
 	public int get_edi_head_count() {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int icnt = 0;
 
 		try {
@@ -203,17 +210,19 @@ public class trans_ora_manager {
 				icnt = 0;
 			}
 		} catch (Exception e) {
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return icnt;
 	}
 
 	public String get_glob_mng_icvan() {
-
-		StringBuilder sndsbf = new StringBuilder();
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONArray arr = new JSONArray();
 
 		try {
@@ -270,14 +279,17 @@ public class trans_ora_manager {
 			}
 
 		} catch (Exception e) {
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return arr.toJSONString();
 	}
 
 	public String get_glob_mng_icvan_json(String sdate) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
 		JSONArray arr = new JSONArray();
 
@@ -349,17 +361,18 @@ public class trans_ora_manager {
 			obj3.put("rows", arr);
 
 		} catch (Exception e) {
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return obj3.toJSONString();
 	}
 
 	public String get_glob_mng_icvan_xml() {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
-		StringBuilder sndsbf = new StringBuilder();
-		JSONArray arr = new JSONArray();
 		StringBuffer sbuf = new StringBuffer();
 
 		try {
@@ -420,14 +433,18 @@ public class trans_ora_manager {
 			sbuf.append("</rows>");
 
 		} catch (Exception e) {
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return sbuf.toString();
 	}
 
 	public int get_user_cnt(String uid) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int rtncnt = 0;
 		try {
 			strbuf = new StringBuffer();
@@ -449,12 +466,16 @@ public class trans_ora_manager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return rtncnt;
 	}
 	
 	public int get_user_check(String uid) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int usechk = 0;
 
 		try {
@@ -470,19 +491,21 @@ public class trans_ora_manager {
 			rs.next();
 
 			usechk = rs.getInt(1);
-			setOraClose();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return usechk;
 	}
 	
 	public int get_update_use_chk(String uid) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int pwcheck = 0;
-		StringBuilder sndsbf = new StringBuilder();
 
 		try {
 			strbuf = new StringBuffer();
@@ -499,14 +522,18 @@ public class trans_ora_manager {
 
 			pwcheck = rs.getInt(1);
 		} catch (Exception e) {
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return pwcheck;
 	}
 	
 	public int get_use_chk_reset(String uid) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int usechk_reset = 0;
 
 		try {
@@ -515,22 +542,24 @@ public class trans_ora_manager {
 			strbuf.append("UPDATE TB_BAS_USER SET USE_CHK='0' where USER_ID=?; ");
 
 			con = getOraConnect();
-			con.setAutoCommit(false);
 			stmt = con.prepareStatement(strbuf.toString());
 			stmt.setString(1, uid); //유저 ID
 
 			usechk_reset = stmt.executeUpdate();
-			con.commit();
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			rollBack();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return usechk_reset;
 	}
 	
 	public int get_user_reset(String uid, String upw) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int result = 0;
 		strbuf = new StringBuffer();
 		
@@ -544,14 +573,17 @@ public class trans_ora_manager {
 			result = stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			rollBack();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return result;
 	}
 	
 	public int get_insert_user_log(String uid) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int result = 0;
 		StringBuffer qrybuf = new StringBuffer();
 		
@@ -569,23 +601,22 @@ public class trans_ora_manager {
 		String formatedNow = now.format(formatter);
 
 		try {
-			ArrayList<String> setting = new ArrayList<>();
 			
-			qrybuf.append(" BEGIN INSERT INTO TB_SYS_LOG (LOG_DD, LOG_TM, LOG_SEQ, LOG_TYPE, LOG_PAGE, LOG_CONT, LOG_USER) VALUES (?, ?, ?, 'L', '','USER LOGIN : "+uid+" "+ndate+" "+formatedNow+" 로그인.', ?); COMMIT; END; ");
+			qrybuf.append(" INSERT INTO TB_SYS_LOG (LOG_DD, LOG_TM, LOG_SEQ, LOG_TYPE, LOG_PAGE, LOG_CONT, LOG_USER) VALUES (?, ?, ?, 'L', '','USER LOGIN : "+uid+" "+ndate+" "+formatedNow+" 로그인.', ?);");
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
-			pstm.setString(1, ndate);
-			pstm.setString(2, formatedNow);
-			pstm.setString(3, seqno);
-			pstm.setString(4, uid);
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
+			stmt.setString(1, ndate);
+			stmt.setString(2, formatedNow);
+			stmt.setString(3, seqno);
+			stmt.setString(4, uid);
 			
-			result = pstm.executeUpdate();
+			result = stmt.executeUpdate();
 
 		} catch (SQLException e) {
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return result;
 	}
@@ -597,6 +628,10 @@ public class trans_ora_manager {
 	 * @return USER_PW, DEP_CD, ORG_CD, USER_LV
 	 */
 	public String[] get_user_info(String uid) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		String[] rtnstr = new String[5];
 		try {
 			strbuf = new StringBuffer();
@@ -624,7 +659,7 @@ public class trans_ora_manager {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return rtnstr;
 	}
@@ -635,6 +670,10 @@ public class trans_ora_manager {
 	 * @return PTAB, VTAB, DTAB
 	 */
 	public String[] get_org_info(String ocd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		String[] rtnstr = new String[4];
 		try {
 			strbuf = new StringBuffer();
@@ -658,14 +697,18 @@ public class trans_ora_manager {
 			}
 
 		} catch (Exception e) {
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return rtnstr;
 	}
 
 	public String[][] get_general_menu_top(String orgcd, String authseq) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		String[][] rtnstr = new String[40][9];
 		try {
 			strbuf = new StringBuffer();
@@ -710,14 +753,18 @@ public class trans_ora_manager {
 			}
 
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return rtnstr;
 	}
 
 	public String[][] get_general_menu_sub(String orgcd, String authseq, String mseq) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		String[][] rtnstr = new String[40][9];
 		try {
 
@@ -764,16 +811,19 @@ public class trans_ora_manager {
 			}
 
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return rtnstr;
 	}
 
 	public String[][] get_general_depart(String orgcd, String depcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		String[][] rtnstr = new String[40][2];
-		StringBuffer exwhere = new StringBuffer();
 		try {
 
 			strbuf = new StringBuffer();
@@ -806,16 +856,19 @@ public class trans_ora_manager {
 			}
 
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return rtnstr;
 	}
 
 	public String[][] get_general_tid(String orgcd, String depcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		String[][] rtnstr = new String[40][9];
-		StringBuffer exwhere = new StringBuffer();
 		try {
 			strbuf = new StringBuffer();
 			strbuf.append("SELECT ");
@@ -856,17 +909,20 @@ public class trans_ora_manager {
 			}
 
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return rtnstr;
 	}
 	
 	//카드사선택
 	public String[][] get_general_acq() {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		String[][] rtnstr = new String[40][9];
-		StringBuffer exwhere = new StringBuffer();
 		
 		try {
 			strbuf = new StringBuffer();
@@ -884,9 +940,9 @@ public class trans_ora_manager {
 			}
 
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return rtnstr;
 
@@ -894,6 +950,10 @@ public class trans_ora_manager {
 
 	//2021.02.16 강원대병원v3 - 상세내역조회 페이지 컬럼 load
 	public String[] get_page_column(String tuser, String type) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		String[] column = new String[6];
 		StringBuffer menuSql = new StringBuffer();
 
@@ -918,16 +978,16 @@ public class trans_ora_manager {
 			menuSql.append("SELECT FIELDS_TXT, ALIGNS, COL_TYPE, SORTS, WIDTHS, POS_FIELD ");
 			menuSql.append("FROM TB_SYS_DOMAIN WHERE ORGCD = ?  AND PAGES = ? ORDER BY ORN ASC");
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(menuSql.toString());
-			pstm.setString(1, userexp[1]);
-			pstm.setString(2, pages);
+			con = getOraConnect();
+			stmt = con.prepareStatement(menuSql.toString());
+			stmt.setString(1, userexp[1]);
+			stmt.setString(2, pages);
 
 			//System.out.println(menuSql.toString());
 			//System.out.println(userexp[1]);
 			//System.out.println(pages);
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			//fields, aligns, colTypes, sorts, colWidth, amtset
 			String fields = "순번,";
@@ -970,9 +1030,9 @@ public class trans_ora_manager {
 			column[5] = amtset;
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return column;
@@ -980,6 +1040,10 @@ public class trans_ora_manager {
 
 	//2021.02.17 강원대병원v3 - 상세내역조회 엑셀다운로드 컬럼 load
 	public ArrayList<String> get_column_field(String tuser, String type, String column) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		StringBuffer menuSql = new StringBuffer();
 		ArrayList<String> pos_field = null;
 		//SELECT POS_FIELD FROM TB_SYS_DOMAIN WHERE ORGCD='$UserExpAuth[1]' AND PAGES='0204' ORDER BY ORN ASC
@@ -1001,12 +1065,12 @@ public class trans_ora_manager {
 			}
 
 			menuSql.append("SELECT FIELDS_TXT, POS_FIELD FROM TB_SYS_DOMAIN WHERE ORGCD = ? AND PAGES = ? ORDER BY ORN ASC");
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(menuSql.toString());
-			pstm.setString(1, userexp[1]);
-			pstm.setString(2, pages);
+			con = getOraConnect();
+			stmt = con.prepareStatement(menuSql.toString());
+			stmt.setString(1, userexp[1]);
+			stmt.setString(2, pages);
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			pos_field = new ArrayList<>();
 			while(rs.next()) {
@@ -1020,7 +1084,7 @@ public class trans_ora_manager {
 		} catch(Exception e){
 			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return pos_field;
@@ -1035,9 +1099,7 @@ public class trans_ora_manager {
 
 			}
 		} catch(Exception e){
-			setOraClose();
-		} finally {
-			setOraClose();
+			e.printStackTrace();
 		}
 		return rtnstr;
 	}
@@ -1101,10 +1163,9 @@ public class trans_ora_manager {
 
 			rtnstr = rtnbuf.toString();
 		} catch (Exception e) {
-			setOraClose();
+			e.printStackTrace();
 		}finally {
 			rtnbuf = null;
-			setOraClose();
 		}
 		return rtnstr;
 	}
@@ -1112,8 +1173,11 @@ public class trans_ora_manager {
 	//2021.02.24 강원대병원v3 웹취소 : 전문생성을 위한 데이터 read
 	@SuppressWarnings({ "unchecked", "static-access" })
 	public String transcancel_getData(String seqno, String tuser, String appno) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONObject sqlobj = new JSONObject();
-		JSONArray sqlAry = new JSONArray();
 
 		StringBuffer qrybuf = new StringBuffer();
 
@@ -1127,11 +1191,11 @@ public class trans_ora_manager {
 			qrybuf.append(userexp[5]);
 			qrybuf.append(" WHERE SEQNO = ? AND APPNO = ? ");
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 
-			pstm.setString(1, seqno);
-			pstm.setString(2, appno);
+			stmt.setString(1, seqno);
+			stmt.setString(2, appno);
 
 			//DEBUG
 			System.out.println(" ============= [transcancel_getData] ============= ");
@@ -1139,7 +1203,7 @@ public class trans_ora_manager {
 			System.out.println("seqno : " + seqno);
 			System.out.println("appno : " + appno);
 	
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			while(rs.next()) {
 				JSONObject tempObj = new JSONObject();
@@ -1178,9 +1242,9 @@ public class trans_ora_manager {
 			}
 
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
@@ -1191,6 +1255,10 @@ public class trans_ora_manager {
 	//2021.03.03 소계, 합계 그냥 다 계산해서 보냄.
 	@SuppressWarnings({ "static-access", "unchecked" })
 	public String get_json_0000total(String tuser, String stime, String etime, String acqcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		StringBuffer qrybuf = new StringBuffer();
 		StringBuffer wherebuf = new StringBuffer();
 		JSONObject sqlobj = new JSONObject();
@@ -1260,13 +1328,13 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(qrybuf, setting);
 			
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
-				pstm.setString((k+1), setting.get(k));
+				stmt.setString((k+1), setting.get(k));
 			}
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			int icnt = 1;
 			//순번, 승인일자, 카드사, 승인건수, 승인금액, 취소건수, 취소금액, 총금액
@@ -1383,9 +1451,9 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
@@ -1393,7 +1461,10 @@ public class trans_ora_manager {
 	}
 
 	public int get_json_0000total_cnt(String tuser, String stime, String etime, String depcd, String casher, String acqcd) {
-
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
+		
 		StringBuffer pqrybuf = new StringBuffer();
 		StringBuffer qrybuf = new StringBuffer();
 		int icnt = 0;
@@ -1461,19 +1532,19 @@ public class trans_ora_manager {
 			pqrybuf.append("    ) group by appdd, acq_cd ");
 			pqrybuf.append(") ");
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
 			stmt2.setString(1, stime);
 			stmt2.setString(2, etime);
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 			rs2.next();
 			icnt = rs2.getInt("MCNT");
 
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return icnt;
 	}
@@ -1482,6 +1553,9 @@ public class trans_ora_manager {
 	@SuppressWarnings({ "unchecked", "static-access" })
 	public String get_json_0204total(String tuser, String stime, String etime, String samt, String eamt, String appno, String acqcd, String pid, String mediid, String medi_cd,
 			String cardno, String tid, String tradeidx, String depcd, String auth01, String auth02, String auth03, String mid) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
@@ -1672,13 +1746,13 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
-				pstm.setString((k+1), setting.get(k));
+				stmt.setString((k+1), setting.get(k));
 			}
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			//총합계->사업부순
 			//순번, 사업부, 승인건수, 승인금액, 취소건수, 취소금액, 총건수, 합계금액, 비씨, 국민, 하나, 삼성, 신한, 현대, 롯데, 농협
@@ -1777,17 +1851,20 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
-		setOraClose();
 		return sqlobj.toJSONString();
 	} 
 
 	//2021.01.29 카드사별조회 엑셀다운로드 - total
 	@SuppressWarnings("unchecked")
 	public String get_json_0201total_excel(String tuser, String stime, String etime, String samt, String eamt, String appno, String tid, String mid, String acqcd, String depcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		StringBuffer qrybuf = new StringBuffer();
 		StringBuffer wherebuf = new StringBuffer();
 		JSONObject sqlobj = new JSONObject();
@@ -1873,12 +1950,12 @@ public class trans_ora_manager {
 			qrybuf.append(wherebuf.toString());
 			qrybuf.append(" GROUP BY APPGB ) )");
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for(int k = 0; k < setting.size(); k++) {
-				pstm.setString((k+1), setting.get(k));
+				stmt.setString((k+1), setting.get(k));
 			}
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			int icnt = 1;
 			while(rs.next()) {
@@ -1906,9 +1983,9 @@ public class trans_ora_manager {
 			sqlobj.put("ITEMS", objAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 
@@ -1920,6 +1997,10 @@ public class trans_ora_manager {
 	//2021.01.29 카드사별조회 엑셀다운로드 - item
 	@SuppressWarnings("unchecked")
 	public String get_json_0201item_excel(String tuser, String stime, String etime, String samt, String eamt, String appno, String tid, String mid, String acqcd, String depcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		StringBuffer qrybuf = new StringBuffer();
 		StringBuffer wherebuf = new StringBuffer();
 		JSONObject sqlobj = new JSONObject();
@@ -2015,15 +2096,15 @@ public class trans_ora_manager {
 
 			System.out.println("query check :: ");
 			System.out.println(qrybuf.toString());
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			System.out.println("parameter check - ");
 			for(int k = 0; k < setting.size(); k++) {
-				pstm.setString((k+1), setting.get(k));
+				stmt.setString((k+1), setting.get(k));
 				System.out.println((k+1) +" : "+setting.get(k));
 			}
 			System.out.println("========================");
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			int icnt = 1;
 			while(rs.next()) {
@@ -2061,9 +2142,9 @@ public class trans_ora_manager {
 
 
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
@@ -2071,7 +2152,9 @@ public class trans_ora_manager {
 
 	@SuppressWarnings("unchecked")
 	public String get_json_0204total_excel(String tuser, String stime, String etime, String tid, String appno, String samt, String eamt, String mid, String pid, String tridx, String depcd, String casher, String cardno, String auth01, String auth02, String auth03) {
-
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
 
 		StringBuffer pqrybuf = new StringBuffer();
 		StringBuffer qrybuf = new StringBuffer();
@@ -2176,9 +2259,9 @@ public class trans_ora_manager {
 			pqrybuf.append("LEFT OUTER JOIN( SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE org_cd='" + userexp[1] + "')T4 ON(T3.DEP_CD=T4.DEP_CD)");
 
 			try {
-				Connection con2 = getOraConnect();
-				PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
-				ResultSet rs2 = stmt2.executeQuery();
+				con2 = getOraConnect();
+				stmt2 = con2.prepareStatement(pqrybuf.toString());
+				rs2 = stmt2.executeQuery();
 
 				//				trans_seed_manager.seed_dec_card(rs.getString("CARDNO").trim())
 				JSONArray jsonarr = new JSONArray();
@@ -2213,9 +2296,9 @@ public class trans_ora_manager {
 			}
 
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return jrtnobj.toJSONString();
 	}
@@ -2223,7 +2306,9 @@ public class trans_ora_manager {
 	@SuppressWarnings("unchecked")
 	public String get_json_0204item_excel(String tuser, String stime, String etime, String tid, String appno, String samt, String eamt, 
 			String mid, String pid, String tridx, String depcd, String casher, String cardno, String auth01, String auth02, String auth03) {
-
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
 
 		JSONObject jrtnobj = new JSONObject();
 		StringBuffer qrybuf = new StringBuffer();
@@ -2295,9 +2380,9 @@ public class trans_ora_manager {
 
 			//System.out.println(pqrybuf.toString());
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
-			ResultSet rs2 = stmt2.executeQuery();
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
+			rs2 = stmt2.executeQuery();
 
 			JSONArray jsonarr = new JSONArray();
 
@@ -2347,9 +2432,9 @@ public class trans_ora_manager {
 			jrtnobj.put("ITEMS", jsonarr);
 
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return jrtnobj.toJSONString();
 	}
@@ -2358,6 +2443,10 @@ public class trans_ora_manager {
 	//2021.02.12 강원대병원 v3 - 카드사별조회 total
 	@SuppressWarnings({ "static-access", "unchecked" })
 	public String get_json_0201total(String tuser, String stime, String etime, String samt, String eamt, String appno, String tid, String mid, String acqcd, String depcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONObject jrtnobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
@@ -2478,13 +2567,13 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
-				pstm.setString((k+1), setting.get(k));
+				stmt.setString((k+1), setting.get(k));
 			}
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			int icnt = 1;
 			long tcnt = 0, tamt = 0;
@@ -2527,9 +2616,9 @@ public class trans_ora_manager {
 			jrtnobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 
@@ -2667,9 +2756,13 @@ public class trans_ora_manager {
 		return jrtnobj.toJSONString();
 	}*/
 
-	//2021.02.12 강원대병원v3 - 카드사별조회 item
+	//카드사별조회 item
 	@SuppressWarnings("unchecked")
 	public String get_json_0201item(String tuser, String stime, String etime, String samt, String eamt, String appno, String tid, String mid, String acqcd, String depcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
@@ -2839,13 +2932,13 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
-				pstm.setString((k+1), setting.get(k));
+				stmt.setString((k+1), setting.get(k));
 			}
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			//2021.02.15
 			//1. Collection 형태로 일단 query 결과물 다 받아옴
@@ -2999,17 +3092,19 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
 	}
 	
 	public int get_json_0201item_cnt(String tuser, String stime, String etime, String samt, String eamt, String appno, String tid, String mid, String acqcd, String depcd) {
-
-		StringBuffer qrybuf = new StringBuffer();
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
+		
 		StringBuffer pqrybuf = new StringBuffer();
 		int icnt = 0;
 		int smtsidx = 2;
@@ -3108,8 +3203,8 @@ public class trans_ora_manager {
 			pqrybuf.append(")t5 on(t1.acq_cd=t5.user_pur_cd) ");
 			pqrybuf.append("order by tid, acq_sort ");
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
 			stmt2.setString(1, stime);
 			stmt2.setString(2, etime);
 
@@ -3119,15 +3214,15 @@ public class trans_ora_manager {
 			if(null!=tid&&""!=tid) {stmt2.setString(tid_idx, tid);}
 			if(null!=mid&&""!=mid) {stmt2.setString(mid_idx, mid);}
 
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 			rs2.next();
 
 			icnt = rs2.getInt("MCNT");
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return icnt;
 	}
@@ -3136,6 +3231,10 @@ public class trans_ora_manager {
 	@SuppressWarnings("unchecked")
 	public String get_json_0202total(String tuser, String syear, String smon, String samt, String eamt, String tid,
 			String mid, String acqcd, String depcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
@@ -3250,13 +3349,13 @@ public class trans_ora_manager {
 			// 디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for (int k = 0; k < setting.size(); k++) {
-				pstm.setString((k + 1), setting.get(k));
+				stmt.setString((k + 1), setting.get(k));
 			}
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			int icnt = 1;
 			long aamt = 0, camt = 0;
@@ -3290,16 +3389,19 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
 	}
 
 	public int get_json_0202item_cnt(String tuser, String syear, String smon, String samt, String eamt, String tid, String mid, String acqcd, String depcd) {
-
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
+		
 		StringBuffer qrybuf = new StringBuffer();
 		StringBuffer pqrybuf = new StringBuffer();
 		int icnt = 0;
@@ -3388,8 +3490,8 @@ public class trans_ora_manager {
 			pqrybuf.append(")t5 on(t1.acq_cd=t5.user_pur_cd) ");
 			pqrybuf.append("order by appdd, acq_sort ");
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
 			stmt2.setString(1, syear + utilm.AddZero(smon, 2) + "%");
 
 			if(null!=samt&&""!=samt) {stmt2.setString(samt_idx, samt);}
@@ -3397,15 +3499,15 @@ public class trans_ora_manager {
 			if(null!=tid&&""!=tid) {stmt2.setString(tid_idx, tid);}
 			if(null!=mid&&""!=mid) {stmt2.setString(mid_idx, mid);}
 
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 			rs2.next();
 
 			icnt = rs2.getInt("MCNT");
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return icnt;
 	}
@@ -3413,6 +3515,10 @@ public class trans_ora_manager {
 	//2021.02.16 강원대병원 v3 - 월일자별조회 item
 	@SuppressWarnings({ "static-access", "unchecked" })
 	public String get_json_0202item(String tuser, String syear, String smon, String samt, String eamt, String tid, String mid, String acqcd, String depcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
@@ -3544,17 +3650,17 @@ public class trans_ora_manager {
 			// 디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for (int k = 0; k < setting.size(); k++) {
-				pstm.setString((k + 1), setting.get(k));
+				stmt.setString((k + 1), setting.get(k));
 			}
 
 			//DEP_NM, PUR_NM, T1.MID, ACQ_CD, APPDD, ACNT, CCNT, AAMT, CAMT
 			ArrayList<String[]> tempStrAry = new ArrayList<>();
 			String[] tempStr = new String[10];
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 			int icnt = 1;
 			while(rs.next()) {
 				int tcnt = 0;
@@ -3695,9 +3801,9 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
@@ -3707,6 +3813,10 @@ public class trans_ora_manager {
 	//2021.02.23 강원대병원v3 - 수정요망(검색조건 - depcd 추가로 인해서)
 	@SuppressWarnings("unchecked")
 	public String get_json_0203total(String tuser, String stime, String etime, String samt, String eamt, String tid, String depcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
@@ -3798,13 +3908,13 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
-				pstm.setString((k+1), setting.get(k));
+				stmt.setString((k+1), setting.get(k));
 			}
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			long aamt = 0, camt = 0;
 			int acnt = 0, ccnt = 0;
@@ -3835,15 +3945,18 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return sqlobj.toJSONString();
 	}
 
 	public int get_json_0203item_cnt(String tuser, String stime, String etime, String samt, String eamt, String tid, String depcd) {
-
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
+		
 		StringBuffer qrybuf = new StringBuffer();
 		StringBuffer pqrybuf = new StringBuffer();
 		int icnt = 0;
@@ -3899,8 +4012,8 @@ public class trans_ora_manager {
 			pqrybuf.append("    ) group by tid, mid, acq_cd ");
 			pqrybuf.append(")");
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
 			stmt2.setString(1, stime);
 			stmt2.setString(2, etime);
 
@@ -3908,15 +4021,15 @@ public class trans_ora_manager {
 			if(null!=eamt&&""!=eamt) {stmt2.setString(eamt_idx, eamt);}
 			if(null!=tid&&""!=tid) {stmt2.setString(tid_idx, tid);}
 
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 			rs2.next();
 
 			icnt = rs2.getInt("MCNT");
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return icnt;
 	}
@@ -3924,6 +4037,10 @@ public class trans_ora_manager {
 	//2021.02.16 강원대병원v3 - 매장별거래조회 item
 	@SuppressWarnings("unchecked")
 	public String get_json_0203item(String tuser, String stime, String etime, String samt, String eamt, String tid, String depcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
@@ -4029,13 +4146,13 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
-				pstm.setString((k+1), setting.get(k));
+				stmt.setString((k+1), setting.get(k));
 			}
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			ArrayList<String[]> tempStrAry = new ArrayList<>();
 			String[] tempStr = new String[9];
@@ -4126,9 +4243,9 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
@@ -4139,6 +4256,9 @@ public class trans_ora_manager {
 	@SuppressWarnings({ "unchecked", "static-access" })
 	public String get_json_0204item(String tuser, String stime, String etime, String samt, String eamt, String appno, String acqcd, String pid, String mediid, String medi_cd,
 			String cardno, String tid, String tradeidx, String depcd, String auth01, String auth02, String auth03, String mid) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
@@ -4322,14 +4442,14 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString(), ResultSet.TYPE_FORWARD_ONLY);
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString(), ResultSet.TYPE_FORWARD_ONLY);
 			for(int k = 0; k<setting.size(); k++) {
-				pstm.setString((k+1), setting.get(k));
+				stmt.setString((k+1), setting.get(k));
 			}
 			
 			
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 			//setFatchSize - 테스트 해보고 변경하거나 제외
 			rs.setFetchSize(500);
 
@@ -4381,12 +4501,10 @@ public class trans_ora_manager {
 			}
 
 			sqlobj.put("rows", sqlAry);
-			setOraClose();
-
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return sqlobj.toJSONString();
 
@@ -4394,6 +4512,9 @@ public class trans_ora_manager {
 	
 	@SuppressWarnings("unchecked")
 	public String get_cardlist_0204(String cardno, String tuser) {
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
 
 		JSONArray arr = new JSONArray();
 		JSONObject jrtnobj = new JSONObject();
@@ -4432,12 +4553,12 @@ public class trans_ora_manager {
 			pqrybuf.append("LEFT OUTER JOIN( SELECT PUR_NM, PUR_CD FROM TB_BAS_PURINFO)T5 ON(T1.ACQ_CD=T5.PUR_CD)");
 
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
 			stmt2.setString(1, cardno.trim());
 			stmt2.setString(2, userexp[1]);
 			stmt2.setString(3, userexp[1]);
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 			int icnt = 1;
 			while(rs2.next()) {
@@ -4489,9 +4610,9 @@ public class trans_ora_manager {
 			jrtnobj.put("rows", arr);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return jrtnobj.toJSONString();
 	}
@@ -4500,6 +4621,9 @@ public class trans_ora_manager {
 	//2021.02.23 강원대병원v3 - 카드 거래건 거래내역상세보기
 	@SuppressWarnings("unchecked")
 	public String get_detail_0204(String seqno, String tuser, String appno) {
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
 
 		JSONArray arr = new JSONArray();
 		JSONObject jrtnobj = new JSONObject();
@@ -4537,14 +4661,14 @@ public class trans_ora_manager {
 
 			System.out.println(pqrybuf.toString());
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
 			stmt2.setString(1, seqno);
 			stmt2.setString(2, appno);
 			stmt2.setString(3, userexp[1]);
 			stmt2.setString(4, userexp[1]);
 
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 			int icnt = 1;
 			if(rs2.next()) {
@@ -4601,9 +4725,9 @@ public class trans_ora_manager {
 
 			}
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return jrtnobj.toJSONString();
 	}
@@ -4611,6 +4735,9 @@ public class trans_ora_manager {
 	@SuppressWarnings({ "unchecked", "static-access" })
 	public String get_json_0204total_cvs(String tuser, String stime, String etime, String samt, String eamt, String appno, String cardtp, String auth01, String auth02, String auth03,
 			String can01, String can02, String can03, String mid, String tid, String acqcd, String tid2, String paging) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
@@ -4835,13 +4962,13 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
-				pstm.setString((k+1), setting.get(k));
+				stmt.setString((k+1), setting.get(k));
 			}
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			long taamt = 0, tcamt = 0, ttamt = 0;
 			int tacnt = 0, tccnt = 0, ttcnt = 0;
@@ -4936,9 +5063,9 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return sqlobj.toJSONString();
 	} 
@@ -4946,6 +5073,9 @@ public class trans_ora_manager {
 	@SuppressWarnings({ "unchecked", "static-access" })
 	public String get_json_0204item_cvs(String tuser, String stime, String etime, String samt, String eamt, String appno, String cardtp, String auth01, String auth02, String auth03,
 			String can01, String can02, String can03, String mid, String tid, String acqcd, String tid2, String paging) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
@@ -5164,13 +5294,13 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString(), ResultSet.TYPE_FORWARD_ONLY);
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString(), ResultSet.TYPE_FORWARD_ONLY);
 			for(int k = 0; k<setting.size(); k++) {
-				pstm.setString((k+1), setting.get(k));
+				stmt.setString((k+1), setting.get(k));
 			}
 			
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 			//setFatchSize - 테스트 해보고 변경하거나 제외
 			rs.setFetchSize(500);
 
@@ -5221,12 +5351,10 @@ public class trans_ora_manager {
 			}
 
 			sqlobj.put("rows", sqlAry);
-			setOraClose();
-
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return sqlobj.toJSONString();
 	}
@@ -5234,6 +5362,9 @@ public class trans_ora_manager {
 	// 2022.01.25 cvsnet - 월일자별조회 상세 갯수
 	public String get_json_0204cnt_cvs(String tuser, String stime, String etime, String samt, String eamt, String appno, String cardtp, String auth01, String auth02, String auth03,
 			String can01, String can02, String can03, String mid, String tid, String acqcd, String tid2) {
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
 
 		StringBuffer qrybuf = new StringBuffer();
 		StringBuffer wherebuf = new StringBuffer();
@@ -5343,20 +5474,20 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(qrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(qrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
 				stmt2.setString((k+1), setting.get(k));
 			}
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 			
 			rs2.next();
 
 			icnt = rs2.getString("MCNT");
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return icnt;
 	}
@@ -5364,6 +5495,10 @@ public class trans_ora_manager {
 	//2021.02.23 강원대병원v3 - 현금영수증 거래내역상세보기
 	@SuppressWarnings("unchecked")
 	public String get_detail_0211(String seqno, String tuser, String appno) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
@@ -5387,14 +5522,14 @@ public class trans_ora_manager {
 			qrybuf.append("WHERE SVCGB IN ('CB') AND AUTHCD='0000' AND TID IN (SELECT TID FROM TB_BAS_TIDMAP WHERE ORG_CD = ? ) ");
 			qrybuf.append("AND SEQNO = ? AND APPNO = ? ) order by appdd desc, apptm DESC");
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
-			pstm.setString(1, userexp[1]);
-			pstm.setString(2, userexp[1]);
-			pstm.setString(3, seqno);
-			pstm.setString(4, appno);
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
+			stmt.setString(1, userexp[1]);
+			stmt.setString(2, userexp[1]);
+			stmt.setString(3, seqno);
+			stmt.setString(4, appno);
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			while(rs.next()) {
 				JSONObject tempObj = new JSONObject();
@@ -5428,9 +5563,9 @@ public class trans_ora_manager {
 			sqlobj.put("ITEMS", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
@@ -5440,6 +5575,10 @@ public class trans_ora_manager {
 	@SuppressWarnings("unchecked")
 	public String get_json_0211total(String tuser, String stime, String etime, String samt, String eamt, String appno, String pid, 
 			String mediid, String medi_cd, String medi_gb, String cardno, String tradeidx, String auth01, String auth02, String auth03){
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
@@ -5568,13 +5707,13 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
-				pstm.setString((k+1), setting.get(k));
+				stmt.setString((k+1), setting.get(k));
 			}
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			//합계부분 계산
 			int total_acnt = 0, total_ccnt = 0;
@@ -5637,9 +5776,9 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
@@ -5649,6 +5788,10 @@ public class trans_ora_manager {
 	@SuppressWarnings("unchecked")
 	public String get_json_0211item(String tuser, String stime, String etime, String samt, String eamt, String appno, String pid, 
 			String mediid, String medi_cd, String medi_gb, String cardno, String tradeidx, String auth01, String auth02, String auth03){
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
@@ -5789,13 +5932,13 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
-				pstm.setString((k+1), setting.get(k));
+				stmt.setString((k+1), setting.get(k));
 			}
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 			rs.setFetchSize(500);
 
 			int icnt = 1;
@@ -5845,15 +5988,18 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
 	}
 
 	public int get_json_0301item_cnt(String tuser, String stime, String etime, String mid, String acqcd, String depcd) {
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
 
 		StringBuffer qrybuf = new StringBuffer();
 		StringBuffer pqrybuf = new StringBuffer();
@@ -5945,8 +6091,8 @@ public class trans_ora_manager {
 			pqrybuf.append("    )t6 on(t3.pur_cd=t6.pur_cd) ");
 			pqrybuf.append("order by dep_nm asc, pur_sort asc, pur_nm asc ");
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
 			stmt2.setString(1, userexp[1]);
 			stmt2.setString(2, stime);
 			stmt2.setString(3, etime);
@@ -5965,21 +6111,25 @@ public class trans_ora_manager {
 			stmt2.setString(smtsidx, userexp[1]);
 
 
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 			rs2.next();
 
 			icnt = rs2.getInt("MCNT");
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return icnt;
 	}
 
 	// 입금조회 집계데이터
 	public String get_json_0301total(String tuser, String stime, String etime, String acqcd, String depcd, String mid) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		StringBuffer qrybuf = new StringBuffer();
 		StringBuffer wherebuf = new StringBuffer();
 
@@ -6162,7 +6312,7 @@ public class trans_ora_manager {
 			stmt.setString(9, "OR0003");
 			stmt.setString(10, "OR0003");
 			*/
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 
 			//TCNT, BCNT, TAMT, INAMT, EXAMT, ITEMCNT, ITEMBAN, ITEMAMT, ITEMFEE, ITEMICOM
 			//정상건수, 반송건수, 매출금액, 수수료, 입금액합계, 정상건수, 반송건수, 매출금액, 수수료, 입금액합계
@@ -6196,7 +6346,7 @@ public class trans_ora_manager {
 		} catch(Exception e){
 			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
@@ -6206,6 +6356,10 @@ public class trans_ora_manager {
 
 	//2021.02.02 입금조회 - item
 	public String get_json_0301item(String tuser, String stime, String etime, String acqcd, String depcd, String mid) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		StringBuffer qrybuf = new StringBuffer();
 		StringBuffer wherebuf = new StringBuffer();
 
@@ -6378,7 +6532,7 @@ public class trans_ora_manager {
 			for(int k = 0; k < preSet.size(); k++) {
 				stmt.setString((k+1), preSet.get(k));
 			}
-			ResultSet rs = stmt.executeQuery();
+			rs = stmt.executeQuery();
 
 			int rows = 1;
 
@@ -6478,7 +6632,7 @@ public class trans_ora_manager {
 		} catch(Exception e){
 			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
@@ -6486,7 +6640,10 @@ public class trans_ora_manager {
 
 	//2021.02.25 강원대병원v3 - 입금상세조회 - total
 	public String get_json_0301detail_total(String tuser, String stime, String etime, String acqcd, String depcd, String mid, String tid, String appno, String auth01, String auth02, String auth03) {
-
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
@@ -6634,29 +6791,29 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(pqrybuf, setting);
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(pqrybuf.toString());
 
 			for(int k = 0; k<setting.size(); k++) {
-				stmt2.setString((k+1), setting.get(k));
+				stmt.setString((k+1), setting.get(k));
 			}
 
-			ResultSet rs2 = stmt2.executeQuery();
+			rs = stmt.executeQuery();
 
 			int total_cnt = 0, total_ban = 0;
 			long total_amt = 0, total_fee = 0, total_exp = 0;
 
 			int icnt = 1;
-			while(rs2.next()) {
+			while(rs.next()) {
 				JSONObject tempObj = new JSONObject();
 				JSONArray tempAry = new JSONArray();
 
-				int i_cnt = Integer.parseInt(utilm.checkNumberData(rs2.getString("I_CNT")));
-				int i_ban = Integer.parseInt(utilm.checkNumberData(rs2.getString("I_BAN")));
+				int i_cnt = Integer.parseInt(utilm.checkNumberData(rs.getString("I_CNT")));
+				int i_ban = Integer.parseInt(utilm.checkNumberData(rs.getString("I_BAN")));
 
-				long i_amt = Long.parseLong(utilm.checkNumberData(rs2.getString("I_AMT")));
-				long i_fee = Long.parseLong(utilm.checkNumberData(rs2.getString("I_FEE")));
-				long i_exp = Long.parseLong(utilm.checkNumberData(rs2.getString("I_EXP")));
+				long i_amt = Long.parseLong(utilm.checkNumberData(rs.getString("I_AMT")));
+				long i_fee = Long.parseLong(utilm.checkNumberData(rs.getDouble("I_FEE")));
+				long i_exp = Long.parseLong(utilm.checkNumberData(rs.getDouble("I_EXP")));
 
 				total_cnt += i_cnt;
 				total_ban += i_ban;
@@ -6664,9 +6821,9 @@ public class trans_ora_manager {
 				total_fee += i_fee;
 				total_exp += i_exp;
 
-				tempAry.add(utilm.setDefault(rs2.getString("DEP_NM")));
-				tempAry.add(utilm.setDefault(rs2.getString("MID")));
-				tempAry.add(utilm.setDefault(rs2.getString("PUR_NM")));
+				tempAry.add(utilm.setDefault(rs.getString("DEP_NM")));
+				tempAry.add(utilm.setDefault(rs.getString("MID")));
+				tempAry.add(utilm.setDefault(rs.getString("PUR_NM")));
 				tempAry.add(i_cnt);
 				tempAry.add(i_ban);
 				tempAry.add(i_amt);
@@ -6700,23 +6857,24 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return sqlobj.toJSONString();
 	}
 
 	//2021.02.25 강원대병원v3 - 입금상세내역 item
 	public String get_json_0301detail_item(String tuser, String stime, String etime, String acqcd, String depcd, String mid, String tid, String appno, String auth01, String auth02, String auth03) {
-
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
 		StringBuffer pqrybuf = new StringBuffer();
 		StringBuffer qrybuf = new StringBuffer();
-
-		int smtsidx = 4;
 
 		try {
 
@@ -6728,8 +6886,6 @@ public class trans_ora_manager {
 
 			//검색항목에 따른 where 조건절 setting 관련 변수
 			ArrayList<String> setting = new ArrayList<>();
-
-			String setdc = "";
 
 			pqrybuf.append("SELECT ");
 			pqrybuf.append("    T1.DEP_SEQ||'|'||T1.DEP_CD SEQNO, ");
@@ -6839,15 +6995,15 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(pqrybuf, setting);
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
 
 			for(int k = 0; k<setting.size(); k++) {
 				stmt2.setString((k+1), setting.get(k));
 			}
 
-			ResultSet rs2 = stmt2.executeQuery();
-			rs2.setFetchSize(500);
+			rs2 = stmt2.executeQuery();
+			//rs.setFetchSize(500);
 
 			int icnt = 1;
 			while(rs2.next()) {
@@ -6870,7 +7026,7 @@ public class trans_ora_manager {
 				}
 
 				String newCardNo = utilm.cardno_masking(trans_seed_manager.seed_dec_card(rs2.getString("CARD_NO").trim()));
-				int expamt = Integer.parseInt(rs2.getString("SALE_AMT")) - Integer.parseInt(rs2.getString("FEE")); 
+				int expamt = Integer.parseInt(rs2.getString("SALE_AMT")) - Integer.parseInt(utilm.checkNumberData(rs2.getDouble("FEE"))); 
 
 				String cardGb = utilm.setDefault(rs2.getString("COM_NO"));
 				if(cardGb.equals("Y")) {
@@ -6893,7 +7049,7 @@ public class trans_ora_manager {
 				tempArr.add(utilm.setDefault(rs2.getString("APP_NO")));
 
 				tempArr.add(utilm.checkNumberData(rs2.getString("SALE_AMT")));
-				tempArr.add(utilm.checkNumberData(rs2.getString("FEE")));
+				tempArr.add(utilm.checkNumberData(rs2.getDouble("FEE")));
 				tempArr.add(expamt);
 
 				tempArr.add(cardGb);
@@ -6915,9 +7071,9 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 
 		return sqlobj.toJSONString();
@@ -6925,6 +7081,9 @@ public class trans_ora_manager {
 	}
 	
 	public String get_json_bigdata() {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
 		JSONObject jrtnobj = new JSONObject();
 
@@ -6991,22 +7150,25 @@ public class trans_ora_manager {
 			jrtnobj.put("ITEMS", jsonarr);
 
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return jrtnobj.toJSONString();
 	}
 
 	public String get_json_0302total(String tuser, String stime, String etime, String sappdd, String eappdd, String acqcd, String depcd, String tid, String mid, String appno) {
-
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
+		
 		JSONObject jrtnobj = new JSONObject();
 
 		JSONArray arr = new JSONArray();
 		StringBuffer pqrybuf = new StringBuffer();
 		StringBuffer qrybuf = new StringBuffer();
-
-		int smtsidx = 1;
+		
+		ArrayList<String> setting = new ArrayList<>();
 
 		try {
 
@@ -7058,60 +7220,47 @@ public class trans_ora_manager {
 			pqrybuf.append("            " + userexp[6]);
 			pqrybuf.append("        where ");
 			pqrybuf.append("            mid in (select mid from tb_bas_midmap where org_cd=?) ");
+			setting.add(userexp[1]);
 
-			int stime_idx = 0;
-			if(null!=stime&&""!=stime) {
-				smtsidx++;
-				stime_idx = smtsidx;
+			if(!stime.equals("") && stime != null) {
 				pqrybuf.append("            and req_dd>=? ");
+				setting.add(stime);
 			}
 
-			int etime_idx = 0;
-			if(null!=etime&&""!=etime) {
-				smtsidx++;
-				etime_idx = smtsidx;
+			if(!etime.equals("") && etime != null) {
 				pqrybuf.append("            and req_dd<=? ");
+				setting.add(etime);
 			}
 
-			int sappdd_idx = 0;
-			if(null!=sappdd&&""!=sappdd) {
-				smtsidx++;
-				sappdd_idx = smtsidx;
+			if(!sappdd.equals("") && sappdd != null) {
 				pqrybuf.append("            and app_dd>=? ");
+				setting.add(sappdd);
 			}
 
-			int eappdd_idx = 0;
-			if(null!=eappdd&&""!=eappdd) {
-				smtsidx++;
-				eappdd_idx = smtsidx;
+			if(!eappdd.equals("") && eappdd != null) {
 				pqrybuf.append("            and app_dd<=? ");
+				setting.add(eappdd);
 			}
 
-			int tid_idx = 0;
-			if(null!=tid&&""!=tid) {
-				smtsidx++;
-				tid_idx = smtsidx;
+			if(!tid.equals("") && tid != null) {
 				pqrybuf.append("            and tid=? ");
+				setting.add(tid);
 			}
 
-			int mid_idx = 0;
-			if(null!=mid&&""!=mid) {
-				smtsidx++;
-				mid_idx = smtsidx;
+			if(!mid.equals("") && mid != null) {
 				pqrybuf.append("            and mid=? ");
+				setting.add(mid);
 			}
 
-			int appno_idx = 0;
-			if(null!=appno&&""!=appno) {
-				smtsidx++;
-				appno_idx = smtsidx;
+			if(!appno.equals("") && appno != null) {
 				pqrybuf.append("            and app_no=? ");
+				setting.add(appno);
 			}
 
-			if(null!=acqcd&&""!=acqcd) {
-				String[] acqexp = acqcd.split(",");
-				String acqwh = "('" + utilm.implode("', '", acqexp) + "')";
-				pqrybuf.append("            and acq_cd in " + acqwh);
+			if(!acqcd.equals("") && acqcd != null) {
+				pqrybuf.append(" AND MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD=? AND ORG_CD=? ) ");
+				setting.add(acqcd);
+				setting.add(userexp[1]);
 			}
 
 			pqrybuf.append("        group by ");
@@ -7122,19 +7271,15 @@ public class trans_ora_manager {
 			pqrybuf.append("    select term_nm, term_id from tb_bas_tidmst ");
 			pqrybuf.append(")t2 on(t1.tid=t2.term_id) ");
 			
+			utilm.debug_sql(pqrybuf, setting);
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
-			stmt2.setString(1, userexp[1]);
-			if(null!=stime&&""!=stime) {stmt2.setString(stime_idx, stime);}
-			if(null!=etime&&""!=etime) {stmt2.setString(etime_idx, etime);}
-			if(null!=sappdd&&""!=sappdd) {stmt2.setString(sappdd_idx, sappdd);}
-			if(null!=eappdd&&""!=eappdd) {stmt2.setString(eappdd_idx, eappdd);}
-			if(null!=tid&&""!=tid) {stmt2.setString(tid_idx, tid);}
-			if(null!=mid&&""!=mid) {stmt2.setString(mid_idx, mid);}
-			if(null!=appno&&""!=appno) {stmt2.setString(appno_idx, appno);}
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
+			for(int k = 0; k<setting.size(); k++) {
+				stmt2.setString((k+1), setting.get(k));
+			}
 
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 			int icnt = 1;
 			
@@ -7145,13 +7290,13 @@ public class trans_ora_manager {
 				JSONArray arr2 = new JSONArray();
 				
 				bctot	+=  Integer.parseInt(rs2.getString("BC"));
-				nhtot	+=  Integer.parseInt(rs2.getString("NH"));
 				kbtot	+=  Integer.parseInt(rs2.getString("KB"));
-				sstot	+=  Integer.parseInt(rs2.getString("SS"));
 				hntot	+=  Integer.parseInt(rs2.getString("HN"));
-				lotot	+=  Integer.parseInt(rs2.getString("LO"));
-				hdtot	+=  Integer.parseInt(rs2.getString("HD"));
+				sstot	+=  Integer.parseInt(rs2.getString("SS"));
 				sitot	+=  Integer.parseInt(rs2.getString("SI"));
+				hdtot	+=  Integer.parseInt(rs2.getString("HD"));
+				lotot	+=  Integer.parseInt(rs2.getString("LO"));
+				nhtot	+=  Integer.parseInt(rs2.getString("NH"));
 
 				arr2.add(icnt);
 				arr2.add(rs2.getString("TERM_NM"));
@@ -7179,13 +7324,13 @@ public class trans_ora_manager {
 			arr2.add("");
 			arr2.add("");
 			arr2.add(bctot);
-			arr2.add(nhtot);
 			arr2.add(kbtot);
-			arr2.add(sstot);
 			arr2.add(hntot);
-			arr2.add(lotot);
-			arr2.add(hdtot);
+			arr2.add(sstot);
 			arr2.add(sitot);
+			arr2.add(hdtot);
+			arr2.add(lotot);
+			arr2.add(nhtot);
 			
 			obj1.put("id", "total");
 			obj1.put("data", arr2);
@@ -7195,22 +7340,25 @@ public class trans_ora_manager {
 			jrtnobj.put("rows", arr);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return jrtnobj.toJSONString();
 	}
 
 	public String get_json_0302item(String tuser, String stime, String etime, String sappdd, String eappdd, String acqcd, String depcd, String tid, String mid, String appno) {
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
 
 		JSONObject jrtnobj = new JSONObject();
 
 		JSONArray arr = new JSONArray();
 		StringBuffer pqrybuf = new StringBuffer();
 		StringBuffer qrybuf = new StringBuffer();
-
-		int smtsidx = 1;
+		
+		ArrayList<String> setting = new ArrayList<>();
 
 		try {
 
@@ -7260,60 +7408,47 @@ public class trans_ora_manager {
 			pqrybuf.append("            " + userexp[6]);
 			pqrybuf.append("        where ");
 			pqrybuf.append("            mid in (select mid from tb_bas_midmap where org_cd=?) ");
+			setting.add(userexp[1]);
 
-			int stime_idx = 0;
-			if(null!=stime&&""!=stime) {
-				smtsidx++;
-				stime_idx = smtsidx;
+			if(!stime.equals("") && stime != null) {
 				pqrybuf.append("            and req_dd>=? ");
+				setting.add(stime);
 			}
 
-			int etime_idx = 0;
-			if(null!=etime&&""!=etime) {
-				smtsidx++;
-				etime_idx = smtsidx;
+			if(!etime.equals("") && etime != null) {
 				pqrybuf.append("            and req_dd<=? ");
+				setting.add(etime);
 			}
 
-			int sappdd_idx = 0;
-			if(null!=sappdd&&""!=sappdd) {
-				smtsidx++;
-				sappdd_idx = smtsidx;
+			if(!sappdd.equals("") && sappdd != null) {
 				pqrybuf.append("            and app_dd>=? ");
+				setting.add(sappdd);
 			}
 
-			int eappdd_idx = 0;
-			if(null!=eappdd&&""!=eappdd) {
-				smtsidx++;
-				eappdd_idx = smtsidx;
+			if(!eappdd.equals("") && eappdd != null) {
 				pqrybuf.append("            and app_dd<=? ");
+				setting.add(eappdd);
 			}
 
-			int tid_idx = 0;
-			if(null!=tid&&""!=tid) {
-				smtsidx++;
-				tid_idx = smtsidx;
+			if(!tid.equals("") && tid != null) {
 				pqrybuf.append("            and tid=? ");
+				setting.add(tid);
 			}
 
-			int mid_idx = 0;
-			if(null!=mid&&""!=mid) {
-				smtsidx++;
-				mid_idx = smtsidx;
+			if(!mid.equals("") && mid != null) {
 				pqrybuf.append("            and mid=? ");
+				setting.add(mid);
 			}
 
-			int appno_idx = 0;
-			if(null!=appno&&""!=appno) {
-				smtsidx++;
-				appno_idx = smtsidx;
+			if(!appno.equals("") && appno != null) {
 				pqrybuf.append("            and app_no=? ");
+				setting.add(appno);
 			}
 
-			if(null!=acqcd&&""!=acqcd) {
-				String[] acqexp = acqcd.split(",");
-				String acqwh = "('" + utilm.implode("', '", acqexp) + "')";
-				pqrybuf.append("            and acq_cd in " + acqwh);
+			if(!acqcd.equals("") && acqcd != null) {
+				pqrybuf.append(" AND MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD=? AND ORG_CD=? ) ");
+				setting.add(acqcd);
+				setting.add(userexp[1]);
 			}
 
 			pqrybuf.append("        group by req_dd, app_dd,  exp_dd, mid, tid,  rtn_cd ");
@@ -7322,47 +7457,38 @@ public class trans_ora_manager {
 			pqrybuf.append(")t1 ");
 			pqrybuf.append("left outer join( ");
 			pqrybuf.append("    select term_id, term_nm from tb_bas_tidmst where org_cd=? ");
+			setting.add(userexp[1]);
 			pqrybuf.append(")t2 on(t1.tid=t2.term_id) ");
 			pqrybuf.append("left outer join( ");
 			pqrybuf.append("    select org_cd, dep_cd, mer_no, pur_cd from tb_bas_merinfo where org_cd=? ");
+			setting.add(userexp[1]);
 			pqrybuf.append(")t3 on(t1.mid=t3.mer_no) ");
 			pqrybuf.append("left outer join( ");
 			pqrybuf.append("    select org_cd, org_nm from tb_bas_org ");
 			pqrybuf.append(")t4 on(t3.org_cd=t4.org_cd) ");
 			pqrybuf.append("left outer join( ");
 			pqrybuf.append("    select dep_cd, dep_nm from tb_bas_depart where org_cd=? ");
+			setting.add(userexp[1]);
 			pqrybuf.append(")t5 on(t3.dep_cd=t5.dep_cd) ");
 			pqrybuf.append("left outer join( ");
 			pqrybuf.append("    select pur_cd, pur_nm, pur_sort, pur_koces from tb_bas_purinfo ");
 			pqrybuf.append(")t6 on(t3.pur_cd=t6.pur_cd) ");
 			pqrybuf.append("left outer join( ");
 			pqrybuf.append("   select org_cd, user_pur_cd, user_pursort from tb_bas_userpurinfo where org_cd=? ");
+			setting.add(userexp[1]);
 			pqrybuf.append(")s3 on(t6.pur_cd=s3.user_pur_cd) ");
 			pqrybuf.append("where item_cnt>0 ");
 			pqrybuf.append("order by t3.dep_cd asc, t1.req_dd asc, user_pursort asc, t1.app_dd asc, t1.exp_dd asc ");
 			
+			utilm.debug_sql(pqrybuf, setting);
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
-			stmt2.setString(1, userexp[1]);
-			if(null!=stime&&""!=stime) {stmt2.setString(stime_idx, stime);}
-			if(null!=etime&&""!=etime) {stmt2.setString(etime_idx, etime);}
-			if(null!=sappdd&&""!=sappdd) {stmt2.setString(sappdd_idx, sappdd);}
-			if(null!=eappdd&&""!=eappdd) {stmt2.setString(eappdd_idx, eappdd);}
-			if(null!=tid&&""!=tid) {stmt2.setString(tid_idx, tid);}
-			if(null!=mid&&""!=mid) {stmt2.setString(mid_idx, mid);}
-			if(null!=appno&&""!=appno) {stmt2.setString(appno_idx, appno);}
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
+			for(int k = 0; k<setting.size(); k++) {
+				stmt2.setString((k+1), setting.get(k));
+			}
 
-			smtsidx++;
-			stmt2.setString(smtsidx, userexp[1]);
-			smtsidx++;
-			stmt2.setString(smtsidx, userexp[1]);
-			smtsidx++;
-			stmt2.setString(smtsidx, userexp[1]);
-			smtsidx++;
-			stmt2.setString(smtsidx, userexp[1]);
-
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 			int icnt = 1;
 			
@@ -7374,8 +7500,8 @@ public class trans_ora_manager {
 				
 				int item_cnt = Integer.parseInt(utilm.checkNumberData(rs2.getString("ITEM_CNT")));
 				long item_amt = Long.parseLong(utilm.checkNumberData(rs2.getString("ITEM_AMT")));
-				long item_fee = Long.parseLong(utilm.checkNumberData(rs2.getString("ITEM_FEE")));
-				long item_exp = Long.parseLong(utilm.checkNumberData(rs2.getString("ITEM_EXP")));
+				long item_fee = Long.parseLong(utilm.checkNumberData(rs2.getDouble("ITEM_FEE")));
+				long item_exp = Long.parseLong(utilm.checkNumberData(rs2.getDouble("ITEM_EXP")));
 
 				count += item_cnt;
 				amount += item_amt;
@@ -7392,8 +7518,8 @@ public class trans_ora_manager {
 				arr2.add(utilm.str_to_dateformat_deposit(rs2.getString("EXP_DD")));
 				arr2.add(rs2.getString("ITEM_CNT"));
 				arr2.add(rs2.getString("ITEM_AMT"));
-				arr2.add(rs2.getString("ITEM_FEE"));
-				arr2.add(rs2.getString("ITEM_EXP"));
+				arr2.add(rs2.getDouble("ITEM_FEE"));
+				arr2.add(rs2.getDouble("ITEM_EXP"));
 
 				obj1.put("id", Integer.toString(icnt));
 				obj1.put("data", arr2);
@@ -7427,22 +7553,25 @@ public class trans_ora_manager {
 			jrtnobj.put("rows", arr);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return jrtnobj.toJSONString();
 	}
 	
 	public String get_json_0302detail_total(String tuser, String stime, String etime, String sappdd, String eappdd, String sexpdd, String eexpdd, String appno, String tid, String mid, String acqcd, String depcd) {
-
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
+		
 		JSONObject jrtnobj = new JSONObject();
 
 		JSONArray arr = new JSONArray();
 		StringBuffer pqrybuf = new StringBuffer();
 		StringBuffer qrybuf = new StringBuffer();
-
-		int smtsidx = 1;
+		
+		ArrayList<String> setting = new ArrayList<>();
 
 		try {
 
@@ -7493,74 +7622,57 @@ public class trans_ora_manager {
 			pqrybuf.append("		FROM ");
 			pqrybuf.append(userexp[6]);
 			pqrybuf.append("        WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP WHERE ORG_CD=?) ");
+			setting.add(userexp[1]);
 
-			int stime_idx = 0;
-			if(null!=stime&&""!=stime) {
-				smtsidx++;
-				stime_idx = smtsidx;
+			if(!stime.equals("") && stime != null) {
 				pqrybuf.append("            AND REQ_DD>=? ");
+				setting.add(stime);
 			}
 
-			int etime_idx = 0;
-			if(null!=etime&&""!=etime) {
-				smtsidx++;
-				etime_idx = smtsidx;
+			if(!etime.equals("") && etime != null) {
 				pqrybuf.append("            AND REQ_DD<=? ");
+				setting.add(etime);
 			}
 
-			int sappdd_idx = 0;
-			if(null!=sappdd&&""!=sappdd) {
-				smtsidx++;
-				sappdd_idx = smtsidx;
+			if(!sappdd.equals("") && sappdd != null) {
 				pqrybuf.append("            AND APP_DD>=? ");
+				setting.add(sappdd);
 			}
 
-			int eappdd_idx = 0;
-			if(null!=eappdd&&""!=eappdd) {
-				smtsidx++;
-				eappdd_idx = smtsidx;
+			if(!eappdd.equals("") && eappdd != null) {
 				pqrybuf.append("            AND APP_DD<=? ");
+				setting.add(eappdd);
 			}
 
-			int sexpdd_idx = 0;
-			if(null!=sexpdd&&""!=sexpdd) {
-				smtsidx++;
-				sexpdd_idx = smtsidx;
+			if(!sexpdd.equals("") && sexpdd != null) {
 				pqrybuf.append("            AND EXP_DD>=? ");
+				setting.add(sexpdd);
 			}
 
-			int eexpdd_idx = 0;
-			if(null!=eexpdd&&""!=eexpdd) {
-				smtsidx++;
-				eexpdd_idx = smtsidx;
+			if(!eexpdd.equals("") && eexpdd != null) {
 				pqrybuf.append("            AND EXP_DD<=? ");
+				setting.add(eexpdd);
 			}
 
-			int tid_idx = 0;
-			if(null!=tid&&""!=tid) {
-				smtsidx++;
-				tid_idx = smtsidx;
+			if(!tid.equals("") && tid != null) {
 				pqrybuf.append("            AND TID=? ");
+				setting.add(tid);
 			}
 
-			int mid_idx = 0;
-			if(null!=mid&&""!=mid) {
-				smtsidx++;
-				mid_idx = smtsidx;
+			if(!mid.equals("") && mid != null) {
 				pqrybuf.append("            AND MID=? ");
+				setting.add(mid);
 			}
 
-			int appno_idx = 0;
-			if(null!=appno&&""!=appno) {
-				smtsidx++;
-				appno_idx = smtsidx;
+			if(!appno.equals("") && appno != null) {
 				pqrybuf.append("            AND APP_NO=? ");
+				setting.add(appno);
 			}
 
-			if(null!=acqcd&&""!=acqcd) {
-				String[] acqexp = acqcd.split(",");
-				String acqwh = "('" + utilm.implode("', '", acqexp) + "')";
-				pqrybuf.append("            AND ACQ_CD IN " + acqwh);
+			if(!acqcd.equals("") && acqcd != null) {
+				pqrybuf.append(" AND MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD=? AND ORG_CD=? ) ");
+				setting.add(acqcd);
+				setting.add(userexp[1]);
 			}
 
 			pqrybuf.append("		GROUP BY  ");
@@ -7570,21 +7682,16 @@ public class trans_ora_manager {
 			pqrybuf.append("LEFT OUTER JOIN( ");
 			pqrybuf.append("    SELECT TERM_NM, TERM_ID FROM TB_BAS_TIDMST ");
 			pqrybuf.append(")T2 ON(T1.TID=T2.TERM_ID) ");
+			
+			utilm.debug_sql(pqrybuf, setting);
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
-			stmt2.setString(1, userexp[1]);
-			if(null!=stime&&""!=stime) {stmt2.setString(stime_idx, stime);}
-			if(null!=etime&&""!=etime) {stmt2.setString(etime_idx, etime);}
-			if(null!=sappdd&&""!=sappdd) {stmt2.setString(sappdd_idx, sappdd);}
-			if(null!=eappdd&&""!=eappdd) {stmt2.setString(eappdd_idx, eappdd);}
-			if(null!=sexpdd&&""!=sexpdd) {stmt2.setString(sexpdd_idx, sexpdd);}
-			if(null!=eexpdd&&""!=eexpdd) {stmt2.setString(eexpdd_idx, eexpdd);}
-			if(null!=tid&&""!=tid) {stmt2.setString(tid_idx, tid);}
-			if(null!=mid&&""!=mid) {stmt2.setString(mid_idx, mid);}
-			if(null!=appno&&""!=appno) {stmt2.setString(appno_idx, appno);}
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
+			for(int k = 0; k<setting.size(); k++) {
+				stmt2.setString((k+1), setting.get(k));
+			}
 
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 			int icnt = 1;
 			long aamt = 0, camt = 0, totcsum = 0, totasum = 0, bctot = 0, nhtot=0, kbtot = 0, sstot = 0, hntot = 0, lotot = 0, hdtot = 0, sitot = 0;
@@ -7593,13 +7700,13 @@ public class trans_ora_manager {
 				JSONArray arr2 = new JSONArray();
 				
 				bctot	+=  Integer.parseInt(rs2.getString("BC"));
-				nhtot	+=  Integer.parseInt(rs2.getString("NH"));
 				kbtot	+=  Integer.parseInt(rs2.getString("KB"));
-				sstot	+=  Integer.parseInt(rs2.getString("SS"));
 				hntot	+=  Integer.parseInt(rs2.getString("HN"));
-				lotot	+=  Integer.parseInt(rs2.getString("LO"));
-				hdtot	+=  Integer.parseInt(rs2.getString("HD"));
+				sstot	+=  Integer.parseInt(rs2.getString("SS"));
 				sitot	+=  Integer.parseInt(rs2.getString("SI"));
+				hdtot	+=  Integer.parseInt(rs2.getString("HD"));
+				lotot	+=  Integer.parseInt(rs2.getString("LO"));
+				nhtot	+=  Integer.parseInt(rs2.getString("NH"));	
 
 				arr2.add(icnt);
 				arr2.add(rs2.getString("TERM_NM"));
@@ -7626,14 +7733,14 @@ public class trans_ora_manager {
 			arr2.add("");
 			arr2.add("");
 			arr2.add(bctot);
-			arr2.add(nhtot);
 			arr2.add(kbtot);
-			arr2.add(sstot);
 			arr2.add(hntot);
-			arr2.add(lotot);
-			arr2.add(hdtot);
+			arr2.add(sstot);
 			arr2.add(sitot);
-			
+			arr2.add(hdtot);
+			arr2.add(lotot);
+			arr2.add(nhtot);
+
 			obj1.put("id", "total");
 			obj1.put("data", arr2);
 			
@@ -7642,22 +7749,25 @@ public class trans_ora_manager {
 			jrtnobj.put("rows", arr);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return jrtnobj.toJSONString();
 	}
 
 	public String get_json_0302detail_item(String tuser, String stime, String etime, String sappdd, String eappdd, String sexpdd, String eexpdd, String appno, String tid, String mid, String acqcd, String depcd) {
-
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
+		
 		JSONObject jrtnobj = new JSONObject();
 
 		JSONArray arr = new JSONArray();
 		StringBuffer pqrybuf = new StringBuffer();
 		StringBuffer qrybuf = new StringBuffer();
-
-		int smtsidx = 4;
+		
+		ArrayList<String> setting = new ArrayList<>();
 
 		try {
 
@@ -7690,108 +7800,86 @@ public class trans_ora_manager {
 			pqrybuf.append("    TB_MNG_DEPDATA T1 ");
 			pqrybuf.append("LEFT OUTER JOIN( ");
 			pqrybuf.append("    SELECT ORG_CD, DEP_CD, STO_CD, MER_NO, PUR_CD FROM TB_BAS_MERINFO WHERE ORG_CD=? ");
+			setting.add(userexp[1]);
 			pqrybuf.append(")T2 ON(T1.MID=T2.MER_NO) ");
 			pqrybuf.append("LEFT OUTER JOIN( ");
 			pqrybuf.append("    SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD=? ");
+			setting.add(userexp[1]);
 			pqrybuf.append(")T3 ON(T2.DEP_CD=T3.DEP_CD) ");
 			pqrybuf.append("LEFT OUTER JOIN( ");
 			pqrybuf.append("    SELECT STO_NM, STO_CD, DEP_CD, ORG_CD FROM TB_BAS_STORE ");
 			pqrybuf.append(")T4 ON(T2.STO_CD=T4.STO_CD AND T2.DEP_CD=T4.DEP_CD AND T2.ORG_CD=T4.ORG_CD) ");
 			pqrybuf.append("LEFT OUTER JOIN( ");
 			pqrybuf.append("    SELECT TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD=? ");
+			setting.add(userexp[1]);
 			pqrybuf.append(")T5 ON(T1.TID=T5.TERM_ID) ");
 			pqrybuf.append("LEFT OUTER JOIN( ");
 			pqrybuf.append("    SELECT PUR_CD, PUR_NM FROM TB_BAS_PURINFO ");
 			pqrybuf.append(")T6 ON(T2.PUR_CD=T6.PUR_CD) ");
 			pqrybuf.append("WHERE ");
 			pqrybuf.append("	MID IN (SELECT MID FROM TB_BAS_MIDMAP WHERE ORG_CD=?) ");
+			setting.add(userexp[1]);
 
-			int stime_idx = 0;
-			if(null!=stime&&""!=stime) {
-				smtsidx++;
-				stime_idx = smtsidx;
-				pqrybuf.append("	AND REQ_DD>=? ");
+			if(!stime.equals("") && stime != null) {
+				pqrybuf.append("            AND REQ_DD>=? ");
+				setting.add(stime);
 			}
 
-			int etime_idx = 0;
-			if(null!=etime&&""!=etime) {
-				smtsidx++;
-				etime_idx = smtsidx;
-				pqrybuf.append("	AND REQ_DD<=? ");
+			if(!etime.equals("") && etime != null) {
+				pqrybuf.append("            AND REQ_DD<=? ");
+				setting.add(etime);
 			}
 
-			int sappdd_idx = 0;
-			if(null!=sappdd&&""!=sappdd) {
-				smtsidx++;
-				sappdd_idx = smtsidx;
-				pqrybuf.append("	AND APP_DD>=? ");
+			if(!sappdd.equals("") && sappdd != null) {
+				pqrybuf.append("            AND APP_DD>=? ");
+				setting.add(sappdd);
 			}
 
-			int eappdd_idx = 0;
-			if(null!=eappdd&&""!=eappdd) {
-				smtsidx++;
-				eappdd_idx = smtsidx;
-				pqrybuf.append("	AND APP_DD<=? ");
+			if(!eappdd.equals("") && eappdd != null) {
+				pqrybuf.append("            AND APP_DD<=? ");
+				setting.add(eappdd);
 			}
 
-			int sexpdd_idx = 0;
-			if(null!=sexpdd&&""!=sexpdd) {
-				smtsidx++;
-				sexpdd_idx = smtsidx;
-				pqrybuf.append("	AND EXP_DD>=? ");
+			if(!sexpdd.equals("") && sexpdd != null) {
+				pqrybuf.append("            AND EXP_DD>=? ");
+				setting.add(sexpdd);
 			}
 
-			int eexpdd_idx = 0;
-			if(null!=eexpdd&&""!=eexpdd) {
-				smtsidx++;
-				eexpdd_idx = smtsidx;
-				pqrybuf.append("	AND EXP_DD<=? ");
+			if(!eexpdd.equals("") && eexpdd != null) {
+				pqrybuf.append("            AND EXP_DD<=? ");
+				setting.add(eexpdd);
 			}
 
-			int tid_idx = 0;
-			if(null!=tid&&""!=tid) {
-				smtsidx++;
-				tid_idx = smtsidx;
-				pqrybuf.append("	AND TID=? ");
+			if(!tid.equals("") && tid != null) {
+				pqrybuf.append("            AND TID=? ");
+				setting.add(tid);
 			}
 
-			int mid_idx = 0;
-			if(null!=mid&&""!=mid) {
-				smtsidx++;
-				mid_idx = smtsidx;
-				pqrybuf.append("	AND MID=? ");
+			if(!mid.equals("") && mid != null) {
+				pqrybuf.append("            AND MID=? ");
+				setting.add(mid);
 			}
 
-			int appno_idx = 0;
-			if(null!=appno&&""!=appno) {
-				smtsidx++;
-				appno_idx = smtsidx;
-				pqrybuf.append("	AND APP_NO=? ");
+			if(!appno.equals("") && appno != null) {
+				pqrybuf.append("            AND APP_NO=? ");
+				setting.add(appno);
 			}
 
-			if(null!=acqcd&&""!=acqcd) {
-				String[] acqexp = acqcd.split(",");
-				String acqwh = "('" + utilm.implode("', '", acqexp) + "')";
-				pqrybuf.append("	AND ACQ_CD IN " + acqwh);
+			if(!acqcd.equals("") && acqcd != null) {
+				pqrybuf.append(" AND MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD=? AND ORG_CD=? ) ");
+				setting.add(acqcd);
+				setting.add(userexp[1]);
 			}
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
-			stmt2.setString(1, userexp[1]);
-			stmt2.setString(2, userexp[1]);
-			stmt2.setString(3, userexp[1]);
-			stmt2.setString(4, userexp[1]);
-			if(null!=stime&&""!=stime) {stmt2.setString(stime_idx, stime);}
-			if(null!=etime&&""!=etime) {stmt2.setString(etime_idx, etime);}
-			if(null!=sappdd&&""!=sappdd) {stmt2.setString(sappdd_idx, sappdd);}
-			if(null!=eappdd&&""!=eappdd) {stmt2.setString(eappdd_idx, eappdd);}
-			if(null!=sexpdd&&""!=sexpdd) {stmt2.setString(sexpdd_idx, sexpdd);}
-			if(null!=eexpdd&&""!=eexpdd) {stmt2.setString(eexpdd_idx, eexpdd);}
-			if(null!=tid&&""!=tid) {stmt2.setString(tid_idx, tid);}
-			if(null!=mid&&""!=mid) {stmt2.setString(mid_idx, mid);}
-			if(null!=appno&&""!=appno) {stmt2.setString(appno_idx, appno);}
+			utilm.debug_sql(pqrybuf, setting);
 
-			ResultSet rs2 = stmt2.executeQuery();
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
+			for(int k = 0; k<setting.size(); k++) {
+				stmt2.setString((k+1), setting.get(k));
+			}
+
+			rs2 = stmt2.executeQuery();
 
 			int icnt = 1;
 			while(rs2.next()) {
@@ -7814,8 +7902,8 @@ public class trans_ora_manager {
 				arr2.add(utilm.str_to_dateformat_deposit(rs2.getString("APP_DD")));
 				arr2.add("");
 				arr2.add(utilm.setDefault(rs2.getString("OAPP_DD")));
-				arr2.add(rs2.getString("FEE"));
-				arr2.add(rs2.getString("EXP_AMT"));
+				arr2.add(utilm.checkNumberData(rs2.getDouble("FEE")));
+				arr2.add(utilm.checkNumberData(rs2.getDouble("EXP_AMT")));
 				arr2.add(utilm.str_to_dateformat_deposit(rs2.getString("REQ_DD")));
 				arr2.add(utilm.str_to_dateformat_deposit(rs2.getString("REG_DD")));
 				arr2.add(rs2.getString("RTN_CD"));
@@ -7832,16 +7920,19 @@ public class trans_ora_manager {
 			jrtnobj.put("rows", arr);
 
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return jrtnobj.toJSONString();
 	}
 
 	//2021.02.26 강원대병원v3 - 거래일자별조회 total
 	public String get_json_0303total(String tuser, String stime, String etime, String sreqdd, String ereqdd, String acqcd, String depcd, String tid, String mid, String appno) {
-
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
@@ -7863,51 +7954,50 @@ public class trans_ora_manager {
 
 			String setdc = "";
 
-			pqrybuf.append("select ");
-			pqrybuf.append("    t2.term_nm ");
-			pqrybuf.append("    ,tid ");
-			pqrybuf.append("    ,bc ");
-			pqrybuf.append("    ,nh ");
-			pqrybuf.append("    ,kb ");
-			pqrybuf.append("    ,ss ");
-			pqrybuf.append("    ,hn ");
-			pqrybuf.append("    ,lo ");
-			pqrybuf.append("    ,hd ");
-			pqrybuf.append("    ,si ");
-			pqrybuf.append("from( ");
-			pqrybuf.append("    select ");
-			pqrybuf.append("        tid ");
-			pqrybuf.append("        ,sum(bca)-sum(bcc) bc ");
-			pqrybuf.append("        ,sum(nha)-sum(nhc) nh ");
-			pqrybuf.append("        ,sum(kba)-sum(kbc) kb ");
-			pqrybuf.append("        ,sum(ssa)-sum(ssc) ss ");
-			pqrybuf.append("        ,sum(hna)-sum(hnc) hn ");
-			pqrybuf.append("        ,sum(loa)-sum(loc) lo ");
-			pqrybuf.append("        ,sum(hda)-sum(hdc) hd ");
-			pqrybuf.append("        ,sum(sia)-sum(sic) si ");
-			pqrybuf.append("    from( ");
-			pqrybuf.append("        select ");
-			pqrybuf.append("            tid ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0006', '026', '01') and rtn_cd='60' then sum(sale_amt) else 0 end bca ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0030', '018', '11') and rtn_cd='60' then sum(sale_amt) else 0 end nha ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0001', '016', '02') and rtn_cd='60' then sum(sale_amt) else 0 end kba ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0004', '031', '06') and rtn_cd='60' then sum(sale_amt) else 0 end ssa ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0005', '008', '03') and rtn_cd='60' then sum(sale_amt) else 0 end hna ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0003', '047', '33') and rtn_cd='60' then sum(sale_amt) else 0 end loa ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0002', '027', '08') and rtn_cd='60' then sum(sale_amt) else 0 end hda ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0007', '029', '07') and rtn_cd='60' then sum(sale_amt) else 0 end sia ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0006', '026', '01') and rtn_cd='67' then sum(sale_amt) else 0 end bcc ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0030', '018', '11') and rtn_cd='67' then sum(sale_amt) else 0 end nhc ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0001', '016', '02') and rtn_cd='67' then sum(sale_amt) else 0 end kbc ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0004', '031', '06') and rtn_cd='67' then sum(sale_amt) else 0 end ssc ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0005', '008', '03') and rtn_cd='67' then sum(sale_amt) else 0 end hnc ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0003', '047', '33') and rtn_cd='67' then sum(sale_amt) else 0 end loc ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0002', '027', '08') and rtn_cd='67' then sum(sale_amt) else 0 end hdc ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0007', '029', '07') and rtn_cd='67' then sum(sale_amt) else 0 end sic ");
-			pqrybuf.append("        from ");
-			pqrybuf.append("            " + userexp[6]);
-			pqrybuf.append("        where ");
-			pqrybuf.append("            mid in (select mid from tb_bas_midmap where org_cd=? ");
+			pqrybuf.append("SELECT ");
+			pqrybuf.append("	T2.TERM_NM ");
+			pqrybuf.append("	,TID ");
+			pqrybuf.append("	,BC ");
+			pqrybuf.append("	,NH ");
+			pqrybuf.append("	,KB ");
+			pqrybuf.append("	,SS ");
+			pqrybuf.append("	,HN ");
+			pqrybuf.append("	,LO ");
+			pqrybuf.append("	,HD ");
+			pqrybuf.append("	,SI ");
+			pqrybuf.append("FROM( ");
+			pqrybuf.append("	SELECT ");
+			pqrybuf.append("		TID ");
+			pqrybuf.append("		,SUM(BCA)-SUM(BCC) BC ");
+			pqrybuf.append("		,SUM(NHA)-SUM(NHC) NH ");
+			pqrybuf.append("		,SUM(KBA)-SUM(KBC) KB ");
+			pqrybuf.append("		,SUM(SSA)-SUM(SSC) SS ");
+			pqrybuf.append("		,SUM(HNA)-SUM(HNC) HN ");
+			pqrybuf.append("		,SUM(LOA)-SUM(LOC) LO ");
+			pqrybuf.append("		,SUM(HDA)-SUM(HDC) HD ");
+			pqrybuf.append("		,SUM(SIA)-SUM(SIC) SI ");
+			pqrybuf.append("	FROM( ");
+			pqrybuf.append("		SELECT  ");
+			pqrybuf.append("			TID ");
+			pqrybuf.append("           ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0400') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END BCA ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0171') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END NHA ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0170') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END KBA ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='1300') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END SSA ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0505') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END HNA ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='1100') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END LOA ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='1200') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END HDA ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0300') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END SIA ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0400') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END BCC ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0171') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END NHC ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0170') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END KBC ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='1300') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END SSC ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0505') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END HNC ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='1100') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END LOC ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='1200') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END HDC ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0300') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END SIC ");
+			pqrybuf.append("		FROM ");
+			pqrybuf.append("			 "+ userexp[6]);
+			pqrybuf.append("			WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP  where org_cd=? ");
 			setting.add(userexp[1]);
 
 			//2021.03.11 depcd 값 설정
@@ -7927,7 +8017,7 @@ public class trans_ora_manager {
 			pqrybuf.append(") ");
 
 			//int stime_idx = 0;
-			if(null!=stime&&""!=stime) {
+			if(!stime.equals("") && stime != null) {
 				//smtsidx++;
 				//stime_idx = smtsidx;
 				pqrybuf.append("            and app_dd>=? ");
@@ -7935,7 +8025,7 @@ public class trans_ora_manager {
 			}
 
 			//int etime_idx = 0;
-			if(null!=etime&&""!=etime) {
+			if(!etime.equals("") && etime != null) {
 				//smtsidx++;
 				//etime_idx = smtsidx;
 				pqrybuf.append("            and app_dd<=? ");
@@ -7943,7 +8033,7 @@ public class trans_ora_manager {
 			}
 
 			//int sreqdd_idx = 0;
-			if(null!=sreqdd&&""!=sreqdd) {
+			if(!sreqdd.equals("") && sreqdd != null) {
 				//smtsidx++;
 				//sreqdd_idx = smtsidx;
 				pqrybuf.append("            and req_dd>=? ");
@@ -7951,7 +8041,7 @@ public class trans_ora_manager {
 			}
 
 			//int ereqdd_idx = 0;
-			if(null!=ereqdd&&""!=ereqdd) {
+			if(!ereqdd.equals("") && ereqdd != null) {
 				//smtsidx++;
 				//ereqdd_idx = smtsidx;
 				pqrybuf.append("            and req_dd<=? ");
@@ -7959,7 +8049,7 @@ public class trans_ora_manager {
 			}
 
 			//int tid_idx = 0;
-			if(null!=tid&&""!=tid) {
+			if(!tid.equals("") && tid != null) {
 				//smtsidx++;
 				//tid_idx = smtsidx;
 				pqrybuf.append("            and tid=? ");
@@ -7967,7 +8057,7 @@ public class trans_ora_manager {
 			}
 
 			//int mid_idx = 0;
-			if(null!=mid&&""!=mid) {
+			if(!mid.equals("") && mid != null) {
 				//smtsidx++;
 				//mid_idx = smtsidx;
 				pqrybuf.append("            and mid=? ");
@@ -7975,13 +8065,19 @@ public class trans_ora_manager {
 			}
 
 			//int appno_idx = 0;
-			if(null!=appno&&""!=appno) {
+			if(!appno.equals("") && appno != null) {
 				//smtsidx++;
 				//appno_idx = smtsidx;
 				pqrybuf.append("            and app_no=? ");
 				setting.add(appno);
 			}
-
+			
+			if(!acqcd.equals("") && acqcd != null) {
+				pqrybuf.append(" AND MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD=? AND ORG_CD=? ) ");
+				setting.add(acqcd);
+				setting.add(userexp[1]);
+			}
+			/*
 			if(!acqcd.equals("") && acqcd != null) {			
 				pqrybuf.append(" AND ACQ_CD IN (");
 
@@ -7994,28 +8090,29 @@ public class trans_ora_manager {
 				}
 				pqrybuf.append(utilm.implode(", ", paramTemp)+")");
 			}
+			*/
 
 
-			pqrybuf.append("        group by ");
-			pqrybuf.append("            tid, acq_cd, rtn_cd ");
-			pqrybuf.append("    ) group by tid ");
-			pqrybuf.append(") t1 ");
-			pqrybuf.append("left outer join( ");
-			pqrybuf.append("    select term_nm, term_id from tb_bas_tidmst ");
-			pqrybuf.append(")t2 on(t1.tid=t2.term_id) ");
+			pqrybuf.append("		GROUP BY  ");
+			pqrybuf.append("			TID, MID, RTN_CD ");
+			pqrybuf.append("	) GROUP BY TID ");
+			pqrybuf.append(") T1 ");
+			pqrybuf.append("LEFT OUTER JOIN( ");
+			pqrybuf.append("    SELECT TERM_NM, TERM_ID FROM TB_BAS_TIDMST ");
+			pqrybuf.append(")T2 ON(T1.TID=T2.TERM_ID) ");
 
 			//디버깅용
 			utilm.debug_sql(pqrybuf, setting);
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
 
 
 			for(int k = 0; k<setting.size(); k++) {
 				stmt2.setString((k+1), setting.get(k));
 			}
 
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 			int icnt = 1;
 
@@ -8087,9 +8184,9 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 
 		return sqlobj.toJSONString();
@@ -8097,7 +8194,10 @@ public class trans_ora_manager {
 
 	//2021.02.26 강원대병원v3 - 거래일자별조회item
 	public String get_json_0303item(String tuser, String stime, String etime, String sreqdd, String ereqdd, String acqcd, String depcd, String tid, String mid, String appno) {
-
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
@@ -8183,7 +8283,7 @@ public class trans_ora_manager {
 
 
 			//int stime_idx = 0;
-			if(null!=stime&&""!=stime) {
+			if(!stime.equals("") && stime != null) {
 				//smtsidx++;
 				//stime_idx = smtsidx;
 				pqrybuf.append("            and app_dd>=? ");
@@ -8191,7 +8291,7 @@ public class trans_ora_manager {
 			}
 
 			//int etime_idx = 0;
-			if(null!=etime&&""!=etime) {
+			if(!etime.equals("") && etime != null) {
 				//smtsidx++;
 				//etime_idx = smtsidx;
 				pqrybuf.append("            and app_dd<=? ");
@@ -8199,7 +8299,7 @@ public class trans_ora_manager {
 			}
 
 			//int sreqdd_idx = 0;
-			if(null!=sreqdd&&""!=sreqdd) {
+			if(!sreqdd.equals("") && sreqdd != null) {
 				//smtsidx++;
 				//sreqdd_idx = smtsidx;
 				pqrybuf.append("            and req_dd>=? ");
@@ -8207,7 +8307,7 @@ public class trans_ora_manager {
 			}
 
 			//int ereqdd_idx = 0;
-			if(null!=ereqdd&&""!=ereqdd) {
+			if(!ereqdd.equals("") && ereqdd != null) {
 				//smtsidx++;
 				//ereqdd_idx = smtsidx;
 				pqrybuf.append("            and req_dd<=? ");
@@ -8215,7 +8315,7 @@ public class trans_ora_manager {
 			}
 
 			//int tid_idx = 0;
-			if(null!=tid&&""!=tid) {
+			if(!tid.equals("") && tid != null) {
 				//smtsidx++;
 				//tid_idx = smtsidx;
 				pqrybuf.append("            and tid=? ");
@@ -8223,7 +8323,7 @@ public class trans_ora_manager {
 			}
 
 			//int mid_idx = 0;
-			if(null!=mid&&""!=mid) {
+			if(!mid.equals("") && mid != null) {
 				//smtsidx++;
 				//mid_idx = smtsidx;
 				pqrybuf.append("            and mid=? ");
@@ -8231,20 +8331,19 @@ public class trans_ora_manager {
 			}
 
 			//int appno_idx = 0;
-			if(null!=appno&&""!=appno) {
+			if(!appno.equals("") && appno != null) {
 				//smtsidx++;
 				//appno_idx = smtsidx;
 				pqrybuf.append("            and app_no=? ");
 				setting.add(appno);
 			}
-
+			
+			if(!acqcd.equals("") && acqcd != null) {
+				pqrybuf.append(" AND MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD=? AND ORG_CD=? ) ");
+				setting.add(acqcd);
+				setting.add(userexp[1]);
+			}
 			/*
-			if(null!=acqcd&&""!=acqcd) {
-				String[] acqexp = acqcd.split(",");
-				String acqwh = "('" + utilm.implode("', '", acqexp) + "')";
-				pqrybuf.append("            and acq_cd in " + acqwh);
-			}*/
-
 			if(!acqcd.equals("") && acqcd != null) {			
 				pqrybuf.append(" AND ACQ_CD IN (");
 
@@ -8257,7 +8356,7 @@ public class trans_ora_manager {
 				}
 				pqrybuf.append(utilm.implode(", ", paramTemp)+")");
 			}
-
+			*/
 			pqrybuf.append("        group by req_dd, app_dd,  exp_dd, mid, tid,  rtn_cd ");
 			pqrybuf.append("    ) ");
 			pqrybuf.append("    group by req_dd, app_dd, exp_dd, tid, mid ");
@@ -8294,12 +8393,12 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(pqrybuf, setting);
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
 				stmt2.setString((k+1), setting.get(k));
 			}			
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 			int icnt = 1;
 
@@ -8312,8 +8411,8 @@ public class trans_ora_manager {
 
 				int item_cnt = Integer.parseInt(utilm.checkNumberData(rs2.getString("ITEM_CNT")));
 				long item_amt = Long.parseLong(utilm.checkNumberData(rs2.getString("ITEM_AMT")));
-				long item_fee = Long.parseLong(utilm.checkNumberData(rs2.getString("ITEM_FEE")));
-				long item_exp = Long.parseLong(utilm.checkNumberData(rs2.getString("ITEM_EXP")));
+				long item_fee = Long.parseLong(utilm.checkNumberData(rs2.getDouble("ITEM_FEE")));
+				long item_exp = Long.parseLong(utilm.checkNumberData(rs2.getDouble("ITEM_EXP")));
 
 				count += item_cnt;
 				amount += item_amt;
@@ -8365,9 +8464,9 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 
 		return sqlobj.toJSONString();
@@ -8376,7 +8475,10 @@ public class trans_ora_manager {
 
 	//2021.02.26 강원대병원 v3 - 거래일자상세내역 total
 	public String get_json_0303detail_total(String tuser, String stime, String etime, String sreqdd, String ereqdd, String sexpdd, String eexpdd, String appno, String tid, String mid, String acqcd, String depcd) {
-
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
+		
 		JSONObject jrtnobj = new JSONObject();
 		JSONArray arr = new JSONArray();
 
@@ -8396,55 +8498,70 @@ public class trans_ora_manager {
 
 			String setdc = "";
 
-			pqrybuf.append("select ");
-			pqrybuf.append("    t2.term_nm ");
-			pqrybuf.append("    ,tid ");
-			pqrybuf.append("    ,bc ");
-			pqrybuf.append("    ,nh ");
-			pqrybuf.append("    ,kb ");
-			pqrybuf.append("    ,ss ");
-			pqrybuf.append("    ,hn ");
-			pqrybuf.append("    ,lo ");
-			pqrybuf.append("    ,hd ");
-			pqrybuf.append("    ,si ");
-			pqrybuf.append("from( ");
-			pqrybuf.append("    select ");
-			pqrybuf.append("        tid ");
-			pqrybuf.append("        ,sum(bca)-sum(bcc) bc ");
-			pqrybuf.append("        ,sum(nha)-sum(nhc) nh ");
-			pqrybuf.append("        ,sum(kba)-sum(kbc) kb ");
-			pqrybuf.append("        ,sum(ssa)-sum(ssc) ss ");
-			pqrybuf.append("        ,sum(hna)-sum(hnc) hn ");
-			pqrybuf.append("        ,sum(loa)-sum(loc) lo ");
-			pqrybuf.append("        ,sum(hda)-sum(hdc) hd ");
-			pqrybuf.append("        ,sum(sia)-sum(sic) si ");
-			pqrybuf.append("    from( ");
-			pqrybuf.append("        select ");
-			pqrybuf.append("            tid ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0006', '026', '01') and rtn_cd='60' then sum(sale_amt) else 0 end bca ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0030', '018', '11') and rtn_cd='60' then sum(sale_amt) else 0 end nha ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0001', '016', '02') and rtn_cd='60' then sum(sale_amt) else 0 end kba ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0004', '031', '06') and rtn_cd='60' then sum(sale_amt) else 0 end ssa ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0005', '008', '03') and rtn_cd='60' then sum(sale_amt) else 0 end hna ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0003', '047', '33') and rtn_cd='60' then sum(sale_amt) else 0 end loa ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0002', '027', '08') and rtn_cd='60' then sum(sale_amt) else 0 end hda ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0007', '029', '07') and rtn_cd='60' then sum(sale_amt) else 0 end sia ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0006', '026', '01') and rtn_cd='67' then sum(sale_amt) else 0 end bcc ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0030', '018', '11') and rtn_cd='67' then sum(sale_amt) else 0 end nhc ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0001', '016', '02') and rtn_cd='67' then sum(sale_amt) else 0 end kbc ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0004', '031', '06') and rtn_cd='67' then sum(sale_amt) else 0 end ssc ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0005', '008', '03') and rtn_cd='67' then sum(sale_amt) else 0 end hnc ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0003', '047', '33') and rtn_cd='67' then sum(sale_amt) else 0 end loc ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0002', '027', '08') and rtn_cd='67' then sum(sale_amt) else 0 end hdc ");
-			pqrybuf.append("            ,case when acq_cd in ('VC0007', '029', '07') and rtn_cd='67' then sum(sale_amt) else 0 end sic ");	
-			pqrybuf.append("        from ");
-			pqrybuf.append("            " + userexp[6]);
-			pqrybuf.append("        where ");
-			pqrybuf.append("            mid in (select mid from tb_bas_midmap where org_cd=?) ");
+			pqrybuf.append("SELECT ");
+			pqrybuf.append("	T2.TERM_NM ");
+			pqrybuf.append("	,TID ");
+			pqrybuf.append("	,BC ");
+			pqrybuf.append("	,NH ");
+			pqrybuf.append("	,KB ");
+			pqrybuf.append("	,SS ");
+			pqrybuf.append("	,HN ");
+			pqrybuf.append("	,LO ");
+			pqrybuf.append("	,HD ");
+			pqrybuf.append("	,SI ");
+			pqrybuf.append("FROM( ");
+			pqrybuf.append("	SELECT ");
+			pqrybuf.append("		TID ");
+			pqrybuf.append("		,SUM(BCA)-SUM(BCC) BC ");
+			pqrybuf.append("		,SUM(NHA)-SUM(NHC) NH ");
+			pqrybuf.append("		,SUM(KBA)-SUM(KBC) KB ");
+			pqrybuf.append("		,SUM(SSA)-SUM(SSC) SS ");
+			pqrybuf.append("		,SUM(HNA)-SUM(HNC) HN ");
+			pqrybuf.append("		,SUM(LOA)-SUM(LOC) LO ");
+			pqrybuf.append("		,SUM(HDA)-SUM(HDC) HD ");
+			pqrybuf.append("		,SUM(SIA)-SUM(SIC) SI ");
+			pqrybuf.append("	FROM( ");
+			pqrybuf.append("		SELECT  ");
+			pqrybuf.append("			TID ");
+			pqrybuf.append("           ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0400') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END BCA ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0171') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END NHA ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0170') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END KBA ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='1300') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END SSA ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0505') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END HNA ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='1100') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END LOA ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='1200') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END HDA ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0300') AND RTN_CD='60' THEN SUM(SALE_AMT) ELSE 0 END SIA ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0400') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END BCC ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0171') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END NHC ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0170') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END KBC ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='1300') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END SSC ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0505') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END HNC ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='1100') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END LOC ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='1200') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END HDC ");
+			pqrybuf.append("            ,CASE WHEN MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD='0300') AND RTN_CD='67' THEN SUM(SALE_AMT) ELSE 0 END SIC ");
+			pqrybuf.append("		FROM ");
+			pqrybuf.append("			 "+ userexp[6]);
+			pqrybuf.append("			WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP  where org_cd=? ");
 			setting.add(userexp[1]);
+			
+			//2021.03.11 depcd 값 설정
+			if(!depcd.equals("") && depcd != null) {
+				pqrybuf.append(" AND DEP_CD = ?");
+				//1-2. 사업부 검색을 선택하긴 했는데 login session 에서 이미 사업부가 있다면
+				if(userexp[2] != null && !userexp[2].equals("")) {
+					setting.add(userexp[2]);
+				} else {
+					setting.add(depcd);
+				}
+				//1-2. 사업부선택 검색기능을 누르진 않았는데 기본적인 login session 에서 사업부가 지정되어 있는 경우
+			} else if(userexp[2] != null && !userexp[2].equals("")) {
+				pqrybuf.append(" AND DEP_CD = ?");
+				setting.add(userexp[2]);
+			}
+			pqrybuf.append(") ");
 
 			//int stime_idx = 0;
-			if(null!=stime&&""!=stime) {
+			if(!stime.equals("") && stime != null) {
 				//smtsidx++;
 				//stime_idx = smtsidx;
 				pqrybuf.append("            and app_dd>=? ");
@@ -8452,7 +8569,7 @@ public class trans_ora_manager {
 			}
 
 			//int etime_idx = 0;
-			if(null!=etime&&""!=etime) {
+			if(!etime.equals("") && etime != null) {
 				//smtsidx++;
 				//etime_idx = smtsidx;
 				pqrybuf.append("            and app_dd<=? ");
@@ -8460,7 +8577,7 @@ public class trans_ora_manager {
 			}
 
 			//int sreqdd_idx = 0;
-			if(null!=sreqdd&&""!=sreqdd) {
+			if(!sreqdd.equals("") && sreqdd != null) {
 				//smtsidx++;
 				//sreqdd_idx = smtsidx;
 				pqrybuf.append("            and req_dd>=? ");
@@ -8468,7 +8585,7 @@ public class trans_ora_manager {
 			}
 
 			//int ereqdd_idx = 0;
-			if(null!=ereqdd&&""!=ereqdd) {
+			if(!ereqdd.equals("") && ereqdd != null) {
 				//smtsidx++;
 				//ereqdd_idx = smtsidx;
 				pqrybuf.append("            and req_dd<=? ");
@@ -8476,7 +8593,7 @@ public class trans_ora_manager {
 			}
 
 			//int sexpdd_idx = 0;
-			if(null!=sexpdd&&""!=sexpdd) {
+			if(!sexpdd.equals("") && sexpdd != null) {
 				//smtsidx++;
 				//sexpdd_idx = smtsidx;
 				pqrybuf.append("            and exp_dd>=? ");
@@ -8484,7 +8601,7 @@ public class trans_ora_manager {
 			}
 
 			//int eexpdd_idx = 0;
-			if(null!=eexpdd&&""!=eexpdd) {
+			if(!eexpdd.equals("") && eexpdd != null) {
 				//smtsidx++;
 				//eexpdd_idx = smtsidx;
 				pqrybuf.append("            and exp_dd<=? ");
@@ -8492,7 +8609,7 @@ public class trans_ora_manager {
 			}
 
 			//int tid_idx = 0;
-			if(null!=tid&&""!=tid) {
+			if(!tid.equals("") && tid != null) {
 				//smtsidx++;
 				//tid_idx = smtsidx;
 				pqrybuf.append("            and tid=? ");
@@ -8500,7 +8617,7 @@ public class trans_ora_manager {
 			}
 
 			//int mid_idx = 0;
-			if(null!=mid&&""!=mid) {
+			if(!mid.equals("") && mid != null) {
 				//smtsidx++;
 				//mid_idx = smtsidx;
 				pqrybuf.append("            and mid=? ");
@@ -8508,14 +8625,19 @@ public class trans_ora_manager {
 			}
 
 			//int appno_idx = 0;
-			if(null!=appno&&""!=appno) {
+			if(!appno.equals("") && appno != null) {
 				//smtsidx++;
 				//appno_idx = smtsidx;
 				pqrybuf.append("            and app_no=? ");
 				setting.add(appno);
 			}
-
-
+			
+			if(!acqcd.equals("") && acqcd != null) {
+				pqrybuf.append(" AND MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD=? AND ORG_CD=? ) ");
+				setting.add(acqcd);
+				setting.add(userexp[1]);
+			}
+			/*
 			if(!acqcd.equals("") && acqcd != null) {			
 				pqrybuf.append(" AND ACQ_CD IN (");
 
@@ -8528,25 +8650,26 @@ public class trans_ora_manager {
 				}
 				pqrybuf.append(utilm.implode(", ", paramTemp)+")");
 			}
+			*/
 
-			pqrybuf.append("        group by ");
-			pqrybuf.append("            tid, acq_cd, rtn_cd ");
-			pqrybuf.append("    ) group by tid ");
-			pqrybuf.append(") t1 ");
-			pqrybuf.append("left outer join( ");
-			pqrybuf.append("    select term_nm, term_id from tb_bas_tidmst ");
-			pqrybuf.append(")t2 on(t1.tid=t2.term_id) ");
+			pqrybuf.append("		GROUP BY  ");
+			pqrybuf.append("			TID, MID, RTN_CD ");
+			pqrybuf.append("	) GROUP BY TID ");
+			pqrybuf.append(") T1 ");
+			pqrybuf.append("LEFT OUTER JOIN( ");
+			pqrybuf.append("    SELECT TERM_NM, TERM_ID FROM TB_BAS_TIDMST ");
+			pqrybuf.append(")T2 ON(T1.TID=T2.TERM_ID) ");
 
 			//디버깅용
 			utilm.debug_sql(pqrybuf, setting);
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
 				stmt2.setString((k+1), setting.get(k));
 			}
 
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 			int icnt = 1;
 			//합계부분 계산
@@ -8616,16 +8739,19 @@ public class trans_ora_manager {
 			jrtnobj.put("rows", arr);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return jrtnobj.toJSONString();
 	}
 	
 	//2021.02.26 강원대병원 v3 거래일자상세내역 item
 		public String get_json_0303detail_item(String tuser, String stime, String etime, String sreqdd, String ereqdd, String sexpdd, String eexpdd, String appno, String tid, String mid, String acqcd, String depcd) {
-
+			Connection con2 = null;
+			PreparedStatement stmt2 = null;
+			ResultSet rs2 = null;
+			
 			JSONObject jrtnobj = new JSONObject();
 
 			JSONArray arr = new JSONArray();
@@ -8645,55 +8771,67 @@ public class trans_ora_manager {
 
 				String setdc = "";
 
-				pqrybuf.append("select ");
-				pqrybuf.append("    concat(t1.dep_seq, t1.dep_cd) seqno ");
-				pqrybuf.append("    ,t3.dep_nm ");
-				pqrybuf.append("    ,t5.term_nm ");
-				pqrybuf.append("    ,tid ");
-				pqrybuf.append("    ,t6.pur_nm ");
-				pqrybuf.append("    ,mid ");
-				pqrybuf.append("    ,case when rtn_cd in ('60', '67') then '정상매출' else '매출반송' end rtn_txt ");
-				pqrybuf.append("    ,case when rtn_cd in ('60', '61') then '승인' when rtn_cd in ('64','67') then '취소' end authtxt ");
-				pqrybuf.append("    ,card_no ");
-				pqrybuf.append("    ,sale_amt amount ");
-				pqrybuf.append("    ,halbu ");
-				pqrybuf.append("    ,app_no ");
-				pqrybuf.append("    ,app_dd ");
-				pqrybuf.append("    ,oapp_dd ");
-				pqrybuf.append("    ,fee ");
-				pqrybuf.append("    ,sale_amt-fee exp_amt ");
-				pqrybuf.append("    ,req_dd ");
-				pqrybuf.append("    ,reg_dd ");
-				pqrybuf.append("    ,rtn_cd ");
-				pqrybuf.append("    ,exp_dd ");
-				pqrybuf.append("    ,rs_msg ");
-				pqrybuf.append("from ");
-				pqrybuf.append("    tb_mng_depdata t1 ");
-				pqrybuf.append("left outer join( ");
-				pqrybuf.append("    select org_cd, dep_cd, sto_cd, mer_no, pur_cd from tb_bas_merinfo where org_cd=? ");
+				pqrybuf.append("SELECT ");
+				pqrybuf.append("    CONCAT(T1.DEP_SEQ, T1.DEP_CD) SEQNO ");
+				pqrybuf.append("	,T3.DEP_NM ");
+				pqrybuf.append("	,T5.TERM_NM ");
+				pqrybuf.append("	,TID ");
+				pqrybuf.append("	,T6.PUR_NM ");
+				pqrybuf.append("	,MID ");
+				pqrybuf.append("	,CASE WHEN RTN_CD IN ('60', '67') THEN '정상매출' ELSE '매출반송' END RTN_TXT ");
+				pqrybuf.append("	,CASE WHEN RTN_CD IN ('60', '61') THEN '승인' WHEN RTN_CD IN ('64','67') THEN '취소' END AUTHTXT ");
+				pqrybuf.append("	,CARD_NO ");
+				pqrybuf.append("	,SALE_AMT AMOUNT ");
+				pqrybuf.append("	,HALBU ");
+				pqrybuf.append("	,APP_NO ");
+				pqrybuf.append("	,APP_DD ");
+				pqrybuf.append("	,OAPP_DD ");
+				pqrybuf.append("	,FEE ");
+				pqrybuf.append("	,SALE_AMT-FEE EXP_AMT ");
+				pqrybuf.append("	,REQ_DD ");
+				pqrybuf.append("	,REG_DD ");
+				pqrybuf.append("	,RTN_CD ");
+				pqrybuf.append("	,EXP_DD ");
+				pqrybuf.append("	,RS_MSG ");
+				pqrybuf.append("FROM ");
+				pqrybuf.append("    TB_MNG_DEPDATA T1 ");
+				pqrybuf.append("LEFT OUTER JOIN( ");
+				pqrybuf.append("    SELECT ORG_CD, DEP_CD, STO_CD, MER_NO, PUR_CD FROM TB_BAS_MERINFO WHERE ORG_CD=? ");
 				setting.add(userexp[1]);
-
-				pqrybuf.append(")t2 on(t1.mid=t2.mer_no) ");
-				pqrybuf.append("left outer join( ");
-				pqrybuf.append("    select dep_nm, dep_cd from tb_bas_depart where org_cd=? ");
+				pqrybuf.append(")T2 ON(T1.MID=T2.MER_NO) ");
+				pqrybuf.append("LEFT OUTER JOIN( ");
+				pqrybuf.append("    SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD=? ");
 				setting.add(userexp[1]);
-
-				pqrybuf.append(")t3 on(t2.dep_cd=t3.dep_cd) ");
-				pqrybuf.append("left outer join( ");
-				pqrybuf.append("    select sto_nm, sto_cd, dep_cd, org_cd from tb_bas_store ");
-				pqrybuf.append(")t4 on(t2.sto_cd=t4.sto_cd and t2.dep_cd=t4.dep_cd and t2.org_cd=t4.org_cd) ");
-				pqrybuf.append("left outer join( ");
-				pqrybuf.append("    select term_nm, term_id from tb_bas_tidmst where org_cd=? ");
+				pqrybuf.append(")T3 ON(T2.DEP_CD=T3.DEP_CD) ");
+				pqrybuf.append("LEFT OUTER JOIN( ");
+				pqrybuf.append("    SELECT STO_NM, STO_CD, DEP_CD, ORG_CD FROM TB_BAS_STORE ");
+				pqrybuf.append(")T4 ON(T2.STO_CD=T4.STO_CD AND T2.DEP_CD=T4.DEP_CD AND T2.ORG_CD=T4.ORG_CD) ");
+				pqrybuf.append("LEFT OUTER JOIN( ");
+				pqrybuf.append("    SELECT TERM_NM, TERM_ID FROM TB_BAS_TIDMST WHERE ORG_CD=? ");
 				setting.add(userexp[1]);
-
-				pqrybuf.append(")t5 on(t1.tid=t5.term_id) ");
-				pqrybuf.append("left outer join( ");
-				pqrybuf.append("    select pur_cd, pur_nm from tb_bas_purinfo ");
-				pqrybuf.append(")t6 on(t2.pur_cd=t6.pur_cd) ");
-				pqrybuf.append("where ");
-				pqrybuf.append("	mid in (select mid from tb_bas_midmap where org_cd=?) ");
+				pqrybuf.append(")T5 ON(T1.TID=T5.TERM_ID)  ");
+				pqrybuf.append("LEFT OUTER JOIN( ");
+				pqrybuf.append("    SELECT PUR_CD, PUR_NM FROM TB_BAS_PURINFO ");
+				pqrybuf.append(")T6 ON(T2.PUR_CD=T6.PUR_CD) ");
+				pqrybuf.append("WHERE MID IN (SELECT MID FROM TB_BAS_MIDMAP  where org_cd=?  ");
 				setting.add(userexp[1]);
-
+				
+				//2021.03.11 depcd 값 설정
+				if(!depcd.equals("") && depcd != null) {
+					pqrybuf.append(" AND DEP_CD = ?");
+					//1-2. 사업부 검색을 선택하긴 했는데 login session 에서 이미 사업부가 있다면
+					if(userexp[2] != null && !userexp[2].equals("")) {
+						setting.add(userexp[2]);
+					} else {
+						setting.add(depcd);
+					}
+					//1-2. 사업부선택 검색기능을 누르진 않았는데 기본적인 login session 에서 사업부가 지정되어 있는 경우
+				} else if(userexp[2] != null && !userexp[2].equals("")) {
+					pqrybuf.append(" AND DEP_CD = ?");
+					setting.add(userexp[2]);
+				}
+				pqrybuf.append(") ");
+				
 				//int stime_idx = 0;
 				if(null!=stime&&""!=stime) {
 					//smtsidx++;
@@ -8765,15 +8903,13 @@ public class trans_ora_manager {
 					pqrybuf.append("	and app_no=? ");
 					setting.add(appno);
 				}
-
-				/*
-				if(null!=acqcd&&""!=acqcd) {
-					String[] acqexp = acqcd.split(",");
-					String acqwh = "('" + utilm.implode("', '", acqexp) + "')";
-					pqrybuf.append("	and acq_cd in " + acqwh);
+				
+				if(!acqcd.equals("") && acqcd != null) {
+					pqrybuf.append(" AND MID IN (SELECT MER_NO FROM TB_BAS_MERINFO WHERE PUR_CD=? AND ORG_CD=? ) ");
+					setting.add(acqcd);
+					setting.add(userexp[1]);
 				}
-				 */
-
+				/*
 				if(!acqcd.equals("") && acqcd != null) {			
 					pqrybuf.append(" AND ACQ_CD IN (");
 
@@ -8786,22 +8922,23 @@ public class trans_ora_manager {
 					}
 					pqrybuf.append(utilm.implode(", ", paramTemp)+")");
 				}
-
+				*/
 				//디버깅용
 				utilm.debug_sql(pqrybuf, setting);
 
-				Connection con2 = getOraConnect();
-				PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+				con2 = getOraConnect();
+				stmt2 = con2.prepareStatement(pqrybuf.toString());
 
 				for(int k = 0; k<setting.size(); k++) {
 					stmt2.setString((k+1), setting.get(k));
 				}
 
-				ResultSet rs2 = stmt2.executeQuery();
+				rs2 = stmt2.executeQuery();
 
 				int icnt = 1;
 				int count = 0;
 				long amount = 0, fee = 0, expamt = 0;
+
 				while(rs2.next()) {
 					JSONObject obj1 = new JSONObject();
 					JSONArray arr2 = new JSONArray();
@@ -8823,8 +8960,8 @@ public class trans_ora_manager {
 					arr2.add(utilm.str_to_dateformat_deposit(rs2.getString("APP_DD")));
 					arr2.add("");
 					arr2.add(utilm.setDefault(rs2.getString("OAPP_DD")));
-					arr2.add(rs2.getString("FEE"));
-					arr2.add(rs2.getString("EXP_AMT"));
+					arr2.add(utilm.checkNumberData(rs2.getDouble("FEE")));
+					arr2.add(utilm.checkNumberData(rs2.getDouble("EXP_AMT")));
 					arr2.add(utilm.str_to_dateformat_deposit(rs2.getString("REQ_DD")));
 					arr2.add(utilm.str_to_dateformat_deposit(rs2.getString("REG_DD")));
 					arr2.add(rs2.getString("RTN_CD"));
@@ -8839,17 +8976,21 @@ public class trans_ora_manager {
 				} 
 
 				jrtnobj.put("rows", arr);
+				
 
 			} catch(Exception e){
-				setOraClose();
+				e.printStackTrace();
 			} finally {
-				setOraClose();
+				setOraClose(con2,stmt2,rs2);
 			}
 			return jrtnobj.toJSONString();
 		}
 	
 		public String get_json_0304total(String tuser, String stime, String etime, String mid, String acqcd, String depcd, String accetc) {
-
+			Connection con2 = null;
+			PreparedStatement stmt2 = null;
+			ResultSet rs2 = null;
+			
 			JSONObject jrtnobj = new JSONObject();
 
 			JSONArray arr = new JSONArray();
@@ -8932,14 +9073,14 @@ public class trans_ora_manager {
 				//디버깅용
 				utilm.debug_sql(pqrybuf, setting);
 
-				Connection con2 = getOraConnect();
-				PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+				con2 = getOraConnect();
+				stmt2 = con2.prepareStatement(pqrybuf.toString());
 
 				for(int k = 0; k<setting.size(); k++) {
 					stmt2.setString((k+1), setting.get(k));
 				}
 
-				ResultSet rs2 = stmt2.executeQuery();
+				rs2 = stmt2.executeQuery();
 
 				while(rs2.next()) {
 					JSONObject obj1 = new JSONObject();
@@ -8961,16 +9102,19 @@ public class trans_ora_manager {
 				jrtnobj.put("rows", arr);
 
 			} catch(Exception e){
-				setOraClose();
+				e.printStackTrace();
 			} finally {
-				setOraClose();
+				setOraClose(con2,stmt2,rs2);
 			}
 			return jrtnobj.toJSONString();
 		}
 
 	public String get_json_0309total(String tuser, String stime, String etime, String samt, String eamt, String appno, String pid, String tradeidx,
 			String mid, String tid, String acqcd, String depcd, String auth01, String auth02, String auth03, String depreq1, String depreq2, String depreq3) {
-
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
+		
 		JSONObject jrtnobj = new JSONObject();
 
 		JSONArray arr = new JSONArray();
@@ -9155,8 +9299,8 @@ public class trans_ora_manager {
 			pqrybuf.append(")T6 ON(T3.PUR_CD=T6.PUR_CD) ");
 			pqrybuf.append("ORDER BY PUR_SORT ASC  ");
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
 			
 			stmt2.setString(1, userexp[1]);
 			stmt2.setString(2, userexp[1]);
@@ -9172,7 +9316,7 @@ public class trans_ora_manager {
 			smtsidx++;
 			stmt2.setString(smtsidx, userexp[1]);
 
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 			int icnt = 1;
 			long AAMTSUM = 0, CAMTSUM = 0, RAAMTSUM = 0, RCAMTSUM = 0, TOTASUM = 0;
@@ -9236,16 +9380,19 @@ public class trans_ora_manager {
 			jrtnobj.put("rows", arr);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return jrtnobj.toJSONString();
 	}
 
 	public String get_json_0309item(String tuser, String stime, String etime, String samt, String eamt, String appno, String pid, String tradeidx,
 			String mid, String tid, String acqcd, String depcd, String auth01, String auth02, String auth03, String depreq1, String depreq2, String depreq3) {
-
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
+		
 		JSONObject jrtnobj = new JSONObject();
 
 		JSONArray arr = new JSONArray();
@@ -9418,8 +9565,8 @@ public class trans_ora_manager {
 				pqrybuf.append(" WHERE APPGB_TXT IN (" + utilm.implode(",", imp_auth) + ") ");
 			}
 			
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
 			
 			
 			stmt2.setString(1, userexp[1]);
@@ -9445,7 +9592,7 @@ public class trans_ora_manager {
 			if(null!=mid&&""!=mid) {stmt2.setString(mid_idx, mid);}
 			if(null!=tid&&""!=tid) {stmt2.setString(tid_idx, tid);}
 
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 			int icnt = 1;
 			while(rs2.next()) {
@@ -9491,18 +9638,21 @@ public class trans_ora_manager {
 			} 
 
 			jrtnobj.put("rows", arr);
-			setOraClose();
+			setOraClose(con,stmt,rs);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return jrtnobj.toJSONString();
 	}
 	
 	public String get_json_0310total(String tuser, String reqstime, String reqetime, String stime, String etime) {
-
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
+		
 		JSONObject jrtnobj = new JSONObject();
 
 		JSONArray arr = new JSONArray();
@@ -9551,12 +9701,12 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(pqrybuf, setting);
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
 				stmt2.setString((k+1), setting.get(k));
 			}
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 			int icnt = 1;
 			int TO_ACNT=0, TO_CCNT=0, TO_NORCNT=0, TO_HACNT=0, TO_HCCNT=0, TO_HALBUCNT=0, TO_TOTCNT=0;
@@ -9641,9 +9791,9 @@ public class trans_ora_manager {
 			jrtnobj.put("rows", arr);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return jrtnobj.toJSONString();
 	}
@@ -9651,6 +9801,10 @@ public class trans_ora_manager {
 	public String get_json_0310detail_total(String tuser, String reqstime, String reqetime, String samt, String eamt, String appno, String pid
 			, String tradeidx, String acqcd, String tid, String deposeq,  String depcd, String auth01, String auth02, String auth03, String tstat01, String tstat02, String tstat03, 
 			String tstat04, String mid) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		StringBuffer qrybuf = new StringBuffer();
 		StringBuffer wherebuf = new StringBuffer();
 		StringBuffer exwherebuf = new StringBuffer();
@@ -9887,13 +10041,13 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for (int k = 0; k < setting.size(); k++) {
-				pstm.setString((k + 1), setting.get(k));
+				stmt.setString((k + 1), setting.get(k));
 			}
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 			
 			int icnt = 1;
 			int ACNTSUM=0, CCNTSUM=0, TOTCSUM=0;
@@ -9974,9 +10128,9 @@ public class trans_ora_manager {
 			 sqlobj.put("rows", objAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
@@ -9985,6 +10139,10 @@ public class trans_ora_manager {
 	public String get_json_0310detail_item(String tuser, String reqstime, String reqetime, String samt, String eamt, String appno, String pid
 			, String tradeidx, String acqcd, String tid, String deposeq,  String depcd, String auth01, String auth02, String auth03, String tstat01, String tstat02, String tstat03, 
 			String tstat04, String mid) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		StringBuffer qrybuf = new StringBuffer();
 		StringBuffer wherebuf = new StringBuffer();
 		StringBuffer exwherebuf = new StringBuffer();
@@ -10207,13 +10365,13 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for (int k = 0; k < setting.size(); k++) {
-				pstm.setString((k + 1), setting.get(k));
+				stmt.setString((k + 1), setting.get(k));
 			}
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 			
 			int icnt = 1;
 
@@ -10260,19 +10418,21 @@ public class trans_ora_manager {
 				
 			}
 			sqlobj.put("rows", objAry);
-			setOraClose();
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
 	}
 	
 	public String get_json_0311total(String tuser, String reqstime, String reqetime, String stime, String etime) {
-
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
+		
 		JSONObject jrtnobj = new JSONObject();
 
 		JSONArray arr = new JSONArray();
@@ -10338,12 +10498,12 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(pqrybuf, setting);
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
 				stmt2.setString((k+1), setting.get(k));
 			}
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 
 			int icnt = 1;
@@ -10410,15 +10570,18 @@ public class trans_ora_manager {
 			jrtnobj.put("rows", arr);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return jrtnobj.toJSONString();
 	}
 
 	public String get_json_0312total(String tuser, String stime, String etime, String reqstime, String reqetime, String tid) {
-
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
+		
 		JSONObject jrtnobj = new JSONObject();
 
 		JSONArray arr = new JSONArray();
@@ -10512,12 +10675,12 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(pqrybuf, setting);
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(pqrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
 				stmt2.setString((k+1), setting.get(k));
 			}
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 
 
 			int icnt = 1;
@@ -10673,15 +10836,19 @@ public class trans_ora_manager {
 			jrtnobj.put("rows", arr);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return jrtnobj.toJSONString();
 	}
 
 	//2021.03.04 강원대병원 - 시스템관리 [원장관리] readData
 	public String[] get_json_060501item(String tuser) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		String[] data = new String[9];
 		StringBuffer qrybuf = new StringBuffer();
 
@@ -10692,12 +10859,12 @@ public class trans_ora_manager {
 			qrybuf.append("ORG_TEL1, ORG_TEL2, ORG_USER, TERM_TYPE, ORG_TAB, ORG_TYPE, ORG_SERVICE, ");
 			qrybuf.append("ORG_EMAIL, ORG_MEMO FROM TB_BAS_ORG WHERE ORG_CD = ? ");
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 
-			pstm.setString(1, userexp[1]);
+			stmt.setString(1, userexp[1]);
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			while(rs.next()) {
 				data[0] = utilm.setDefault(rs.getString("ORG_NM"));
@@ -10712,9 +10879,9 @@ public class trans_ora_manager {
 			}
 
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return data;
@@ -10723,6 +10890,10 @@ public class trans_ora_manager {
 	//2021.03.04 강원대병원 - 시스템관리 [원장관리] 사용자정보 readData
 	//2021.03.09 사용자관리 통합?
 	public String get_json_060501item_userList(String tuser) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
@@ -10740,12 +10911,12 @@ public class trans_ora_manager {
 			qrybuf.append("WHERE ORG_CD = ? ");
 			qrybuf.append("ORDER BY USER_ID ASC, INS_DT ASC");
 
-			Connection con = getOraConnect();
+			con = getOraConnect();
 
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
-			pstm.setString(1, userexp[1]);
+			stmt = con.prepareStatement(qrybuf.toString());
+			stmt.setString(1, userexp[1]);
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			int rcnt = 1;
 			while(rs.next()) {
@@ -10786,9 +10957,9 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
@@ -10797,6 +10968,10 @@ public class trans_ora_manager {
 	//2021.03.04 강원대병원 - 시스템관리 [원장관리] data update
 	public int get_json_060501item_update(String tuser, String comnm, String comno, String comexno, String comceo,
 			String cometype, String comservice, String comtel, String comaddr, String orgmemo) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int result = 0;
 		strbuf = new StringBuffer();
 
@@ -10828,7 +11003,7 @@ public class trans_ora_manager {
 			e.printStackTrace();
 			result = -1;
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return result;
@@ -10836,6 +11011,10 @@ public class trans_ora_manager {
 
 	//2021.03.04 강원대병원 - 시스템관리 [사업부관리] readData
 	public String get_json_060502item(String tuser) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
@@ -10849,11 +11028,11 @@ public class trans_ora_manager {
 			qrybuf.append("DEP_SORT, DEP_TYPE, TO_CHAR(DEP_INDT,'YYYY-MM-DD HH24:MI:SS') DEP_INDT ");
 			qrybuf.append("FROM TB_BAS_DEPART WHERE ORG_CD = ? ORDER BY DEP_INDT ASC");
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
-			pstm.setString(1, userexp[1]);
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
+			stmt.setString(1, userexp[1]);
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			int rcnt = 1;
 			while(rs.next()) {
@@ -10885,9 +11064,9 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
@@ -10901,6 +11080,10 @@ public class trans_ora_manager {
 		4.tr코드 return
 	 */
 	public String get_json_060502item_tid_list(String orgcd, String depcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		StringBuffer qrybuf = new StringBuffer();
 		StringBuffer htmlbuf = new StringBuffer();
 
@@ -10912,14 +11095,14 @@ public class trans_ora_manager {
 			qrybuf.append(")T2 ON(T1.ORG_CD=T2.ORG_CD AND T1.TERM_ID=T2.TID) ");
 			qrybuf.append("WHERE T1.ORG_CD = ? ORDER BY TERM_NM ");
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 
-			pstm.setString(1, orgcd);
-			pstm.setString(2, depcd);
-			pstm.setString(3, orgcd);
+			stmt.setString(1, orgcd);
+			stmt.setString(2, depcd);
+			stmt.setString(3, orgcd);
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			int icnt = 0;
 			String bcolor = "#f5f5f5";
@@ -10948,9 +11131,9 @@ public class trans_ora_manager {
 			}
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return htmlbuf.toString();
 
@@ -10962,6 +11145,9 @@ public class trans_ora_manager {
 	 * 2. tid 선택한 데이터들 update 처리
 	 */
 	public int get_json_060502item_tid_list_update(String orgcd, String depcd, String[] tid, String tuser) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
 		int result = 0;
 		strbuf = new StringBuffer();
@@ -11011,10 +11197,10 @@ public class trans_ora_manager {
 			}
 		} catch(Exception e){
 			e.printStackTrace();
-			rollBack();
+			rollBack(con);
 			result = -1;
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return result;
@@ -11022,6 +11208,10 @@ public class trans_ora_manager {
 
 	//2021.03.04 강원대병원 v3 - 시스템관리 [사업부관리] 가맹점관리 list Load
 	public String get_json_060502item_mid_list(String orgcd, String depcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		StringBuffer qrybuf = new StringBuffer();
 		StringBuffer htmlbuf = new StringBuffer();
 
@@ -11033,14 +11223,14 @@ public class trans_ora_manager {
 			qrybuf.append("LEFT OUTER JOIN( SELECT PUR_CD, PUR_NM, PUR_SORT FROM TB_BAS_PURINFO )T3 ON(T1.PUR_CD=T3.PUR_CD) ");
 			qrybuf.append("WHERE T1.ORG_CD = ? ORDER BY PUR_SORT, MER_NO ASC");
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 
-			pstm.setString(1, orgcd);
-			pstm.setString(2, depcd);
-			pstm.setString(3, orgcd);
+			stmt.setString(1, orgcd);
+			stmt.setString(2, depcd);
+			stmt.setString(3, orgcd);
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			int icnt = 0;
 			String bcolor = "#f5f5f5";
@@ -11069,9 +11259,9 @@ public class trans_ora_manager {
 			}
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return htmlbuf.toString();
@@ -11083,6 +11273,9 @@ public class trans_ora_manager {
 	 * 2. tid 선택한 데이터들 update 처리
 	 */
 	public int get_json_060502item_mid_list_update(String orgcd, String depcd, String[] mid, String tuser) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
 		int result = 0;
 		//int lengArrMid = mid != null ? mid.length : 0;
@@ -11132,10 +11325,10 @@ public class trans_ora_manager {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			rollBack();
+			rollBack(con);
 			result = -1;
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return result;
@@ -11143,19 +11336,23 @@ public class trans_ora_manager {
 
 	//2021.03.04 강원대병원 v3 - 시스템관리 [사업부관리] 가맹점관리 사업부 불러오기
 	public String[] get_json_060502item_deplist(String orgcd, String depcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		String[] data = new String[5];
 
 		StringBuffer qrybuf = new StringBuffer();
 
 		try {
 			qrybuf.append("SELECT * FROM TB_BAS_DEPART WHERE ORG_CD = ?  AND DEP_CD = ? ");
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 
-			pstm.setString(1, orgcd);
-			pstm.setString(2, depcd);
+			stmt.setString(1, orgcd);
+			stmt.setString(2, depcd);
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			while(rs.next()) {
 				data[0] = utilm.setDefault(rs.getString("DEP_NM"));
@@ -11166,9 +11363,9 @@ public class trans_ora_manager {
 			}
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return data;
@@ -11177,6 +11374,10 @@ public class trans_ora_manager {
 	//2021.03.04 강원대병원 v3 - 시스템관리 [사업부관리] 가맹점관리 사업부 수정
 	public int get_json_060502item_deposit_update(String dep_nm, String dep_adm_user, String dep_tel1, 
 			String dep_email, String dep_type, String orgcd, String depcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int result = 0;
 		strbuf = new StringBuffer();
 
@@ -11201,7 +11402,7 @@ public class trans_ora_manager {
 			e.printStackTrace();
 			result = -1;
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return result;
@@ -11209,6 +11410,10 @@ public class trans_ora_manager {
 
 	//2021.03.04 강원대병원 v3 - 시스템관리 [사업부관리] 가맹점관리 사업부 삭제
 	public int get_json_060502item_deposit_delete(String orgcd, String depcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int result = 0;
 
 		strbuf = new StringBuffer();
@@ -11236,10 +11441,10 @@ public class trans_ora_manager {
 			
 		} catch(Exception e){
 			e.printStackTrace();
-			rollBack();
+			rollBack(con);
 			result = -1;
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return result;
@@ -11248,6 +11453,10 @@ public class trans_ora_manager {
 	//2021.03.08 강원대병원 v3 - 시스템관리 [사업부관리] 가맹점관리 사업부 추가
 	public int get_json_060502item_deposit_insert(String tuser, String dep_nm, String dep_adm_user, String dep_tel1, 
 			String dep_email, String dep_type) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int result = 0;
 
 		strbuf = new StringBuffer();
@@ -11282,7 +11491,7 @@ public class trans_ora_manager {
 			e.printStackTrace();
 			result = -1;
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return result;
@@ -11290,6 +11499,10 @@ public class trans_ora_manager {
 
 	//2021.03.08 강원대병원 v3 - 가맹점 리스트 불러오기
 	public String get_json_060503_item_merlist(String tuser) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
@@ -11306,11 +11519,11 @@ public class trans_ora_manager {
 			qrybuf.append("LEFT OUTER JOIN(SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART)T3 ON(T1.DEP_CD=T3.DEP_CD) ");
 			qrybuf.append("WHERE T1.ORG_CD = ? ORDER BY PUR_NM, DEP_NM ASC");
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
-			pstm.setString(1, userexp[1]);
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
+			stmt.setString(1, userexp[1]);
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			int rcnt = 1;
 			while(rs.next()) {
@@ -11352,9 +11565,9 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 
@@ -11363,6 +11576,10 @@ public class trans_ora_manager {
 
 
 	public String get_json_060503_item_mermap(String tuser) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
@@ -11379,10 +11596,10 @@ public class trans_ora_manager {
 			qrybuf.append("LEFT OUTER JOIN(SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART)T3 ON(T1.DEP_CD=T3.DEP_CD) ");
 			qrybuf.append("WHERE T1.ORG_CD = ? ORDER BY T1.DEP_CD ASC, T2.PUR_NM ASC, INSTIME ASC");
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
-			pstm.setString(1, userexp[1]);
-			ResultSet rs = pstm.executeQuery();
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
+			stmt.setString(1, userexp[1]);
+			rs = stmt.executeQuery();
 
 			int rcnt = 1;
 			while(rs.next()) {
@@ -11414,9 +11631,9 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 
@@ -11425,6 +11642,10 @@ public class trans_ora_manager {
 
 	//2021.03.08 강원대병원 - 시스템관리 [가맹점관리] 가맹점번호 수정 tab 정보 불러오기
 	public String[] get_json_060503_item_merData(String orgcd, String mercd, String mid) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		String[] data = new String[10];
 		StringBuffer qrybuf = new StringBuffer();
 
@@ -11437,13 +11658,13 @@ public class trans_ora_manager {
 			qrybuf.append("LEFT OUTER JOIN(SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART)T3 ON(T1.DEP_CD=T3.DEP_CD) ");
 			qrybuf.append("WHERE T1.ORG_CD = ? AND MER_CD = ? AND MER_NO = ? ");
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
-			pstm.setString(1, orgcd);
-			pstm.setString(2, mercd);
-			pstm.setString(3, mid);
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
+			stmt.setString(1, orgcd);
+			stmt.setString(2, mercd);
+			stmt.setString(3, mid);
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			while(rs.next()) {
 				data[0] = utilm.setDefault(rs.getString("DEP_CD"));
@@ -11459,9 +11680,9 @@ public class trans_ora_manager {
 			}
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return data;
@@ -11471,6 +11692,9 @@ public class trans_ora_manager {
 	//2021.03.08 강원대병원 - 시스템관리 [가맹점관리] 가맹점번호 수정 tab 정보 수정하기
 	public int get_json_060503_item_merData_update(String orgcd, String mercd, String depcd, String mid, String purcd, 
 			String merst, String meret, String fee01, String fee02, String fee03) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
 		int result = 0;
 		strbuf = new StringBuffer();
@@ -11499,13 +11723,17 @@ public class trans_ora_manager {
 			e.printStackTrace();
 			result = -1;
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return result;
 	}
 
 	//2021.03.08 강원대병원 - 시스템관리 [가맹점관리] 가맹점번호 수정 tab 정보 삭제하기		
 	public int get_json_060503_item_merData_delete(String orgcd, String mid) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int result = 0;
 		strbuf = new StringBuffer();
 
@@ -11528,10 +11756,10 @@ public class trans_ora_manager {
 
 		} catch(Exception e){
 			e.printStackTrace();
-			rollBack();
+			rollBack(con);
 			result = -1;
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return result;
@@ -11542,6 +11770,9 @@ public class trans_ora_manager {
 	//2. 아닐경우 insert
 	public int get_json_060503_item_merData_insert(String tuser, String depcd, String purcd, String mid, 
 			String merst, String meret, String van, String fee01, String fee02, String fee03) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
 		int result = 0;
 
@@ -11595,7 +11826,7 @@ public class trans_ora_manager {
 			e.printStackTrace();
 			result = -1;
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return result;
@@ -11605,6 +11836,9 @@ public class trans_ora_manager {
 
 	//2021.03.08 강원대병원 - 시스템관리 [단말기관리] 단말기번호원장 list
 	public String get_json_060504_item_tidlist(String tuser) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
@@ -11622,11 +11856,11 @@ public class trans_ora_manager {
 			qrybuf.append("LEFT OUTER JOIN(SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART)T2 ON(T1.DEP_CD=T2.DEP_CD) ");
 			qrybuf.append("WHERE ORG_CD = ? ORDER BY T1.DEP_CD ASC, T1.TERM_IST_DD ASC");
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 
-			pstm.setString(1, userexp[1]);
-			ResultSet rs = pstm.executeQuery();
+			stmt.setString(1, userexp[1]);
+			rs = stmt.executeQuery();
 
 			int rcnt = 1;
 			while(rs.next()) {
@@ -11676,9 +11910,9 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
@@ -11686,6 +11920,9 @@ public class trans_ora_manager {
 
 	//2021.03.08 강원대병원 - 시스템관리 [단말기관리] 단말기번호 등록현황 list
 	public String get_json_060504_item_tidmap(String tuser) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
@@ -11703,14 +11940,14 @@ public class trans_ora_manager {
 			qrybuf.append("LEFT OUTER JOIN(SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART WHERE ORG_CD = ? )T3 ON(T1.DEP_CD=T3.DEP_CD) ");
 			qrybuf.append("WHERE T1.ORG_CD = ? ORDER BY T1.DEP_CD ASC, INSTIME ASC");
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 
-			pstm.setString(1, userexp[1]);
-			pstm.setString(2, userexp[1]);
-			pstm.setString(3, userexp[1]);
+			stmt.setString(1, userexp[1]);
+			stmt.setString(2, userexp[1]);
+			stmt.setString(3, userexp[1]);
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			int rcnt = 1;
 			while(rs.next()) {
@@ -11744,9 +11981,9 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		
 		return sqlobj.toJSONString();
@@ -11754,6 +11991,10 @@ public class trans_ora_manager {
 
 	//2021.03.09 강원대병원 - 시스템관리 [단말기관리] 단말기번호 단말기 정보 read
 	public String[] get_json_060503_item_tidData(String depcd, String orgcd, String tid) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		String[] data = new String[6];
 		StringBuffer qrybuf = new StringBuffer();
 
@@ -11763,13 +12004,13 @@ public class trans_ora_manager {
 			qrybuf.append("LEFT OUTER JOIN(SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART)T2 ON(T1.DEP_CD=T2.DEP_CD) ");
 			qrybuf.append("WHERE ORG_CD = ? AND TID_CD = ? ");
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 
-			pstm.setString(1, orgcd);
-			pstm.setString(2, tid);
+			stmt.setString(1, orgcd);
+			stmt.setString(2, tid);
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			while(rs.next()) {
 				data[0] = utilm.setDefault(rs.getString("DEP_CD"));
@@ -11781,9 +12022,9 @@ public class trans_ora_manager {
 			}
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return data;
@@ -11791,7 +12032,10 @@ public class trans_ora_manager {
 
 	//2021.03.09 강원대병원 - 시스템관리 [단말기관리] 단말기번호 단말기 정보 update
 	public int get_json_060503_item_tid_update(String orgcd, String tidcd, String depcd, String tidnm, String tid, String vangb, String term_type) {
-
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int result = 0;
 		strbuf = new StringBuffer();
 
@@ -11816,7 +12060,7 @@ public class trans_ora_manager {
 			e.printStackTrace();
 			result = -1;
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 
@@ -11825,7 +12069,10 @@ public class trans_ora_manager {
 
 	//2021.03.09 강원대병원 - 시스템관리 [단말기관리] 단말기번호 단말기 정보 delete
 	public int get_json_060503_item_tid_delete(String orgcd, String tid) {
-
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int result = 0;
 		strbuf = new StringBuffer();
 
@@ -11850,7 +12097,7 @@ public class trans_ora_manager {
 			e.printStackTrace();
 			result = -1;
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 
@@ -11859,6 +12106,10 @@ public class trans_ora_manager {
 
 	//2021.03.08 강원대병원 - 시스템관리 [단말기관리] 단말기번호 insert
 	public int get_json_060504_item_insert(String tuser, String depcd, String tid, String term_nm, String term_type, String vangb) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int result = 0;
 		strbuf = new StringBuffer();
 
@@ -11908,7 +12159,7 @@ public class trans_ora_manager {
 			e.printStackTrace();
 			result = -1;
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return result;
@@ -11916,6 +12167,10 @@ public class trans_ora_manager {
 
 	//2021.03.09 강원대병원 - 시스템관리 [사용자관리] 데이터 정보
 	public String[] get_json_060505_item_userInfo(String mem_cd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		String[] data = new String[9];
 		StringBuffer qrybuf = new StringBuffer();
 
@@ -11927,12 +12182,12 @@ public class trans_ora_manager {
 			qrybuf.append("LEFT OUTER JOIN(SELECT DEP_NM, DEP_CD FROM TB_BAS_DEPART)T2 ON(T1.DEP_CD=T2.DEP_CD) ");
 			qrybuf.append("WHERE MEM_CD = ? ");
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 
-			pstm.setString(1, mem_cd);
+			stmt.setString(1, mem_cd);
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			while(rs.next()) {
 				data[0] = utilm.setDefault(rs.getString("DEP_CD"));
@@ -11948,9 +12203,9 @@ public class trans_ora_manager {
 			}
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return data;
@@ -11960,6 +12215,10 @@ public class trans_ora_manager {
 	//2021.03.17 비밀번호 hash처리
 	public int get_json_060505_item_userInfo_update(String orgcd, String depcd, String memcd, String mem_id, String mem_pw, 
 			String mem_nm, String memlv, String mem_tel1, String mem_tel2, String mem_email) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int result = 0;
 		strbuf = new StringBuffer();
 
@@ -12024,7 +12283,7 @@ public class trans_ora_manager {
 			e.printStackTrace();
 			result = -1;
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return result;
@@ -12032,6 +12291,10 @@ public class trans_ora_manager {
 
 	//2021.03.09 강원대병원 - 시스템관리 [사용자관리] 데이터 삭제
 	public int get_json_060505_item_userInfo_delete(String orgcd, String memcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 
 		int result = 0;
 		strbuf = new StringBuffer();
@@ -12051,7 +12314,7 @@ public class trans_ora_manager {
 			e.printStackTrace();
 			result = -1;
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return result;
@@ -12062,6 +12325,10 @@ public class trans_ora_manager {
 	public int get_json_060505_item_insert(String tuser, String depcd, String memid, 
 			String mempw, String memnm, String memlv, String memtel1, 
 			String memtel2, String mememail) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		int result = 0;
 		strbuf = new StringBuffer();
 
@@ -12158,7 +12425,7 @@ public class trans_ora_manager {
 			e.printStackTrace();
 			result = -1;
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return result;
@@ -12167,6 +12434,10 @@ public class trans_ora_manager {
 	//2021.03.15 강원대병원 - 매출달력 - 카드/현금
 	//날짜별 합계 데이터만 return, 나머지는 gowas에서 처리하는 걸로(detail)
 	public String get_json_0210_cal(String tuser, String syear, String smon, String acqcd, String mid, String tid, String depcd, String type) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 
@@ -12260,13 +12531,13 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
-				pstm.setString((k+1), setting.get(k));
+				stmt.setString((k+1), setting.get(k));
 			}
 
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 
 			int rcnt = 1;
 			while(rs.next()) {
@@ -12286,15 +12557,19 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
 	}
 	
 	public String get_json_0210_cal_total(String tuser, String syear, String smon, String acqcd, String mid, String tid, String depcd) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
 		
@@ -12401,13 +12676,13 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(qrybuf, setting);
 			
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
-				pstm.setString((k+1), setting.get(k));
+				stmt.setString((k+1), setting.get(k));
 			}
 			
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 			
 			//합계부분
 			long cash_aamt = 0, cash_camt = 0, card_aamt = 0, card_camt = 0;
@@ -12487,9 +12762,9 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 			
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		
 		return sqlobj.toJSONString();
@@ -12497,6 +12772,9 @@ public class trans_ora_manager {
 	
 	//2021.03.22 계좌입금원장 :: bankinfo 정보 가져오기
 	public ArrayList<String[]> get_excelup_bankInfoData(String tuser) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 		
 		StringBuffer qrybuf = new StringBuffer();
 		ArrayList<String[]> bankInfo = new ArrayList<>();
@@ -12507,12 +12785,12 @@ public class trans_ora_manager {
 				
 			qrybuf.append("SELECT ACC_TXT, MID, ACQCD FROM TB_BAS_BANKINFO WHERE ORG_CD = ?  AND DEP_CD = ? ");
 			
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
-			pstm.setString(1, userexp[1]);
-			pstm.setString(2, userexp[2]);
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
+			stmt.setString(1, userexp[1]);
+			stmt.setString(2, userexp[2]);
 			
-			ResultSet rs = pstm.executeQuery();
+			rs = stmt.executeQuery();
 			
 			while(rs.next()) {
 				String[] temp = new String[3];
@@ -12525,45 +12803,46 @@ public class trans_ora_manager {
 			}
 			
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		return bankInfo;
 	}
 	
 	//2021.03.22 excelUp -> TB_MNG_BANKDATA DATA INSERT
-	public void excelup_insertBankData(String tuser, String[] data)
-	{
+	public void excelup_insertBankData(String tuser, String[] data){
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		StringBuffer qrybuf = new StringBuffer();
 		
 		try {
 			//tuser split
 			String[] userexp = tuser.split(":");
 			
-			qrybuf.append("BEGIN ");
 			qrybuf.append("INSERT INTO TB_MNG_BANKDATA ");
 			qrybuf.append("(ORG_CD, DEP_CD, EXP_DD, EXP_AMT, ACC_TXT, ACQ_CD, MID)");
-			qrybuf.append(" VALUES ( ?, ?, ?, ?, ?, ?, ?); ");
-			qrybuf.append("COMMIT; END;");
+			qrybuf.append(" VALUES ( ?, ?, ?, ?, ?, ?, ?) ");
 		
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			
-			pstm.setString(1, userexp[1]);
-			pstm.setString(2, userexp[2]);
-			pstm.setString(3, data[0]);
-			pstm.setString(4, data[1]);
-			pstm.setString(5, data[2]);
-			pstm.setString(6, data[3]);
-			pstm.setString(7, data[4]);
+			stmt.setString(1, userexp[1]);
+			stmt.setString(2, userexp[2]);
+			stmt.setString(3, data[0]);
+			stmt.setString(4, data[1]);
+			stmt.setString(5, data[2]);
+			stmt.setString(6, data[3]);
+			stmt.setString(7, data[4]);
 			
-			pstm.executeUpdate();
+			stmt.executeUpdate();
 			
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 		
 	}
@@ -12571,6 +12850,10 @@ public class trans_ora_manager {
 		// 2022.01.25 cvsnet - 월일자별조회 total
 		@SuppressWarnings("unchecked")
 		public String get_json_0102total_cvs(String tuser, String syear, String smon, String depcd) {
+			Connection con = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			
 			JSONObject sqlobj = new JSONObject();
 			JSONArray sqlAry = new JSONArray();
 
@@ -12614,13 +12897,13 @@ public class trans_ora_manager {
 				// 디버깅용
 				utilm.debug_sql(qrybuf, setting);
 
-				Connection con = getOraConnect();
-				PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+				con = getOraConnect();
+				stmt = con.prepareStatement(qrybuf.toString());
 				for (int k = 0; k < setting.size(); k++) {
-					pstm.setString((k + 1), setting.get(k));
+					stmt.setString((k + 1), setting.get(k));
 				}
 
-				ResultSet rs = pstm.executeQuery();
+				rs = stmt.executeQuery();
 
 				int icnt = 1;
 				long aamt = 0, camt = 0;
@@ -12654,9 +12937,9 @@ public class trans_ora_manager {
 				sqlobj.put("rows", sqlAry);
 
 			} catch(Exception e){
-				setOraClose();
+				e.printStackTrace();
 			} finally {
-				setOraClose();
+				setOraClose(con,stmt,rs);
 			}
 
 			return sqlobj.toJSONString();
@@ -12665,6 +12948,10 @@ public class trans_ora_manager {
 		// 2022.01.25 cvsnet - 월일자별조회 item
 		@SuppressWarnings({ "static-access", "unchecked" })
 		public String get_json_0102item_cvs(String tuser, String syear, String smon, String depcd) {
+			Connection con = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			
 			JSONObject sqlobj = new JSONObject();
 			JSONArray sqlAry = new JSONArray();
 
@@ -12711,17 +12998,17 @@ public class trans_ora_manager {
 				// 디버깅용
 				utilm.debug_sql(qrybuf, setting);
 
-				Connection con = getOraConnect();
-				PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+				con = getOraConnect();
+				stmt = con.prepareStatement(qrybuf.toString());
 				for (int k = 0; k < setting.size(); k++) {
-					pstm.setString((k + 1), setting.get(k));
+					stmt.setString((k + 1), setting.get(k));
 				}
 
 				//DEP_NM, PUR_NM, T1.MID, ACQ_CD, APPDD, ACNT, CCNT, AAMT, CAMT
 				ArrayList<String[]> tempStrAry = new ArrayList<>();
 				String[] tempStr = new String[7];
 
-				ResultSet rs = pstm.executeQuery();
+				rs = stmt.executeQuery();
 				int icnt = 1;
 				while(rs.next()) {
 					int tcnt = 0;
@@ -12861,7 +13148,7 @@ public class trans_ora_manager {
 			} catch(Exception e){
 				e.printStackTrace();
 			} finally {
-				setOraClose();
+				setOraClose(con,stmt,rs);
 			}
 
 			return sqlobj.toJSONString();
@@ -12870,6 +13157,9 @@ public class trans_ora_manager {
 		public String get_json_0104total_cvs(String tuser, String stime, String etime, String samt, String eamt,
 				String appno, String tradeidx, String auth01, String auth02, String auth03, String mid,
 				String tid, String acqcd, String tid2) {
+			Connection con = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
 			
 			JSONObject sqlobj = new JSONObject();
 			JSONArray sqlAry = new JSONArray();
@@ -13011,13 +13301,13 @@ public class trans_ora_manager {
 				// 디버깅용
 				utilm.debug_sql(qrybuf, setting);
 
-				Connection con = getOraConnect();
-				PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+				con = getOraConnect();
+				stmt = con.prepareStatement(qrybuf.toString());
 				for (int k = 0; k < setting.size(); k++) {
-					pstm.setString((k + 1), setting.get(k));
+					stmt.setString((k + 1), setting.get(k));
 				}
 
-				ResultSet rs = pstm.executeQuery(); 
+				rs = stmt.executeQuery(); 
 
 				int icnt = 1;
 				long aamt = 0, camt = 0, totcsum = 0, totasum = 0, bctot = 0, nhtot=0, kbtot = 0, sstot = 0, hntot = 0, lotot = 0, hdtot = 0, sitot = 0;
@@ -13069,7 +13359,7 @@ public class trans_ora_manager {
 			} catch(Exception e){
 				e.printStackTrace();
 			} finally {
-				setOraClose();
+				setOraClose(con,stmt,rs);
 			}
 			return sqlobj.toJSONString();
 		}
@@ -13078,6 +13368,9 @@ public class trans_ora_manager {
 		public String get_json_0104item_cvs(String tuser, String stime, String etime, String samt, String eamt,
 				String appno, String tradeidx, String auth01, String auth02, String auth03, String mid, String tid,
 				String acqcd, String tid2) {
+			Connection con = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
 
 			JSONObject sqlobj = new JSONObject();
 			JSONArray sqlAry = new JSONArray();
@@ -13284,28 +13577,29 @@ public class trans_ora_manager {
 				// 디버깅용
 				utilm.debug_sql(qrybuf, setting);
 
-				Connection con = getOraConnect();
-				PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
-				//for (int k = 0; k < setting.size(); k++) {
-				//	pstm.setString((k + 1), setting.get(k));
-				//}
-				pstm.setString(1, "OR0003");
-				pstm.setString(2, "OR0003");
-				pstm.setString(3, "OR0003");
-				pstm.setString(4, "OR0003");
-				pstm.setString(5, "OR0003");
-				pstm.setString(6, "OR0003");
-				pstm.setString(7, "OR0003");
-				pstm.setString(8, "OR0003");
-				pstm.setString(9, "OR0003");
-				pstm.setString(10, "OR0003");
-				pstm.setString(11, "MD1544676184");
-				pstm.setString(12, "20211206");
-				pstm.setString(13, "20211206");
-				pstm.setString(14, "OR0003");
-				pstm.setString(15, "OR0003");
-
-				ResultSet rs = pstm.executeQuery(); 
+				con = getOraConnect();
+				stmt = con.prepareStatement(qrybuf.toString());
+				for (int k = 0; k < setting.size(); k++) {
+					stmt.setString((k + 1), setting.get(k));
+				}
+				/*test
+				stmt.setString(1, "OR0003");
+				stmt.setString(2, "OR0003");
+				stmt.setString(3, "OR0003");
+				stmt.setString(4, "OR0003");
+				stmt.setString(5, "OR0003");
+				stmt.setString(6, "OR0003");
+				stmt.setString(7, "OR0003");
+				stmt.setString(8, "OR0003");
+				stmt.setString(9, "OR0003");
+				stmt.setString(10, "OR0003");
+				stmt.setString(11, "MD1544676184");
+				stmt.setString(12, "20211206");
+				stmt.setString(13, "20211206");
+				stmt.setString(14, "OR0003");
+				stmt.setString(15, "OR0003");
+				*/
+				rs = stmt.executeQuery(); 
 
 				int icnt = 1;
 				while (rs.next()) {
@@ -13353,12 +13647,11 @@ public class trans_ora_manager {
 					
 				}
 				sqlobj.put("rows", sqlAry);
-				setOraClose();
 				
 			} catch(Exception e){
 				e.printStackTrace();
 			} finally {
-				setOraClose();
+				setOraClose(con,stmt,rs);
 			}
 
 			return sqlobj.toJSONString();
@@ -13368,6 +13661,9 @@ public class trans_ora_manager {
 		public String get_json_0104cnt_cvs(String tuser, String stime, String etime, String samt, String eamt,
 				String appno, String tradeidx, String auth01, String auth02, String auth03, String mid, String tid,
 				String acqcd, String tid2) {
+			Connection con2 = null;
+			PreparedStatement stmt2 = null;
+			ResultSet rs2 = null;
 
 			StringBuffer qrybuf = new StringBuffer();
 			StringBuffer wherebuf = new StringBuffer();
@@ -13451,20 +13747,20 @@ public class trans_ora_manager {
 				//디버깅용
 				utilm.debug_sql(qrybuf, setting);
 
-				Connection con2 = getOraConnect();
-				PreparedStatement stmt2 = con2.prepareStatement(qrybuf.toString());
+				con2 = getOraConnect();
+				stmt2 = con2.prepareStatement(qrybuf.toString());
 				for(int k = 0; k<setting.size(); k++) {
 					stmt2.setString((k+1), setting.get(k));
 				}
-				ResultSet rs2 = stmt2.executeQuery();
+				rs2 = stmt2.executeQuery();
 				
 				rs2.next();
 
 				icnt = rs2.getString("MCNT");
 			} catch(Exception e){
-				setOraClose();
+				e.printStackTrace();
 			} finally {
-				setOraClose();
+				setOraClose(con2,stmt2,rs2);
 			}
 			return icnt;
 		}
@@ -13473,6 +13769,9 @@ public class trans_ora_manager {
 	public String get_json_0106total_cvs(String tuser, String stime, String etime, String samt, String eamt,
 			String appno, String tradeidx, String auth01, String auth02, String auth03, String mid,
 			String tid, String acqcd, String tid2) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 		
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
@@ -13669,13 +13968,13 @@ public class trans_ora_manager {
 			// 디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for (int k = 0; k < setting.size(); k++) {
-				pstm.setString((k + 1), setting.get(k));
+				stmt.setString((k + 1), setting.get(k));
 			}
 
-			ResultSet rs = pstm.executeQuery(); 
+			rs = stmt.executeQuery(); 
 
 			int icnt = 1;
 			long aamt = 0, camt = 0, totcsum = 0, totasum = 0, bctot = 0, nhtot=0, kbtot = 0, sstot = 0, hntot = 0, lotot = 0, hdtot = 0, sitot = 0;
@@ -13727,9 +14026,9 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
@@ -13739,6 +14038,9 @@ public class trans_ora_manager {
 	public String get_json_0106item_cvs(String tuser, String stime, String etime, String samt, String eamt,
 			String appno, String tradeidx, String auth01, String auth02, String auth03, String mid, String tid,
 			String acqcd, String tid2) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
 
 		JSONObject sqlobj = new JSONObject();
 		JSONArray sqlAry = new JSONArray();
@@ -13930,13 +14232,13 @@ public class trans_ora_manager {
 			// 디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con = getOraConnect();
-			PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
 			for (int k = 0; k < setting.size(); k++) {
-				pstm.setString((k + 1), setting.get(k));
+				stmt.setString((k + 1), setting.get(k));
 			}
 
-			ResultSet rs = pstm.executeQuery(); 
+			rs = stmt.executeQuery(); 
 
 			int icnt = 1;
 			while (rs.next()) {
@@ -13984,9 +14286,9 @@ public class trans_ora_manager {
 			sqlobj.put("rows", sqlAry);
 			
 		} catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con,stmt,rs);
 		}
 
 		return sqlobj.toJSONString();
@@ -13996,6 +14298,9 @@ public class trans_ora_manager {
 	public String get_json_0106cnt_cvs(String tuser, String stime, String etime, String samt, String eamt,
 			String appno, String tradeidx, String auth01, String auth02, String auth03, String mid, String tid,
 			String acqcd, String tid2) {
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
 
 		StringBuffer qrybuf = new StringBuffer();
 		StringBuffer wherebuf = new StringBuffer();
@@ -14085,20 +14390,20 @@ public class trans_ora_manager {
 			//디버깅용
 			utilm.debug_sql(qrybuf, setting);
 
-			Connection con2 = getOraConnect();
-			PreparedStatement stmt2 = con2.prepareStatement(qrybuf.toString());
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(qrybuf.toString());
 			for(int k = 0; k<setting.size(); k++) {
 				stmt2.setString((k+1), setting.get(k));
 			}
-			ResultSet rs2 = stmt2.executeQuery();
+			rs2 = stmt2.executeQuery();
 			
 			rs2.next();
 
 			icnt = rs2.getString("MCNT");
 		}catch(Exception e){
-			setOraClose();
+			e.printStackTrace();
 		} finally {
-			setOraClose();
+			setOraClose(con2,stmt2,rs2);
 		}
 		return icnt;
 	}
@@ -14379,6 +14684,10 @@ public class trans_ora_manager {
 		//cvs 반송입금조회
 		public String get_json_0301total_ban(String tuser, String stime, String etime, String acqcd, String depcd,
 				String mid) {
+			Connection con = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			
 			StringBuffer qrybuf = new StringBuffer();
 			StringBuffer wherebuf = new StringBuffer();
 
@@ -14499,7 +14808,9 @@ public class trans_ora_manager {
 					}
 				}
 				
-				qrybuf.append(" LEFT OUTER JOIN( SELECT EXP_DD, MID, CASE WHEN SUM(EXP_AMT) IS NULL THEN 0 ELSE SUM(EXP_AMT) END BANK_AMT FROM TB_MNG_BANKDATA WHERE MID IS NOT NULL GROUP BY EXP_DD, MID)T2 ON(T1.MID=T2.MID AND T1.EXP_DD=T2.EXP_DD) ");
+				qrybuf.append(" LEFT OUTER JOIN( SELECT EXP_DD, MID, CASE WHEN SUM(EXP_AMT) IS NULL THEN 0 ELSE SUM(EXP_AMT) END BANK_AMT FROM TB_MNG_BANKDATA  ");
+				qrybuf.append(" WHERE MID IS NOT NULL AND NOT REGEXP_LIKE( exp_amt,'[A-Za-z]|[가-힛]|') AND exp_amt != '' ");
+				qrybuf.append(" GROUP BY EXP_DD, MID)T2 ON(T1.MID=T2.MID AND T1.EXP_DD=T2.EXP_DD)  ");
 				qrybuf.append(" LEFT OUTER JOIN( SELECT ORG_CD, DEP_CD, MER_NO, PUR_CD FROM TB_BAS_MERINFO WHERE ORG_CD=?)T3 ON(T1.MID=T3.MER_NO) ");
 				preSet.add(userexp[1]);
 				qrybuf.append(" LEFT OUTER JOIN( SELECT ORG_CD, ORG_NM FROM TB_BAS_ORG)T4 ON(T3.ORG_CD=T4.ORG_CD) ");
@@ -14511,13 +14822,13 @@ public class trans_ora_manager {
 				//디버깅용
 				utilm.debug_sql(qrybuf, preSet);
 
-				Connection con = getOraConnect();
-				PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+				con = getOraConnect();
+				stmt = con.prepareStatement(qrybuf.toString());
 				for (int k = 0; k < preSet.size(); k++) {
-					pstm.setString((k + 1), preSet.get(k));
+					stmt.setString((k + 1), preSet.get(k));
 				}
 				
-				ResultSet rs = pstm.executeQuery();
+				rs = stmt.executeQuery();
 
 				//TCNT, BCNT, TAMT, INAMT, EXAMT, ITEMCNT, ITEMBAN, ITEMAMT, ITEMFEE, ITEMICOM
 				//정상건수, 반송건수, 매출금액, 수수료, 입금액합계, 정상건수, 반송건수, 매출금액, 수수료, 입금액합계
@@ -14549,9 +14860,9 @@ public class trans_ora_manager {
 				sqlobj.put("rows", objAry);
 
 			} catch(Exception e){
-				setOraClose();
+				e.printStackTrace();
 			} finally {
-				setOraClose();
+				setOraClose(con,stmt,rs);
 			}
 
 			return sqlobj.toJSONString();
@@ -14561,6 +14872,9 @@ public class trans_ora_manager {
 				String eadd_date, String sadd_recp, String eadd_recp, String appno, String pid, String pcd,
 				String depcd, String auth01, String auth02, String auth03, String card01, String card02, String card03,
 				String card04, String card05) {
+			Connection con = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
 			
 			JSONObject sqlobj = new JSONObject();
 			JSONArray sqlAry = new JSONArray();
@@ -14668,13 +14982,13 @@ public class trans_ora_manager {
 				// 디버깅용
 				utilm.debug_sql(qrybuf, setting);
 
-				Connection con = getOraConnect();
-				PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+				con = getOraConnect();
+				stmt = con.prepareStatement(qrybuf.toString());
 				for (int k = 0; k < setting.size(); k++) {
-					pstm.setString((k + 1), setting.get(k));
+					stmt.setString((k + 1), setting.get(k));
 				}
 
-				ResultSet rs = pstm.executeQuery(); 
+				rs = stmt.executeQuery(); 
 
 				int icnt = 1;
 				long aamt = 0, camt = 0;
@@ -14706,9 +15020,9 @@ public class trans_ora_manager {
 				sqlobj.put("rows", sqlAry);
 
 			} catch(Exception e){
-				setOraClose();
+				e.printStackTrace();
 			} finally {
-				setOraClose();
+				setOraClose(con,stmt,rs);
 			}
 
 			return sqlobj.toJSONString();
@@ -14718,6 +15032,9 @@ public class trans_ora_manager {
 				String eadd_date, String sadd_recp, String eadd_recp, String appno, String pid, String pcd,
 				String depcd, String auth01, String auth02, String auth03, String card01, String card02, String card03,
 				String card04, String card05, String paging) {
+			Connection con = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
 			
 			JSONObject sqlobj = new JSONObject();
 			JSONArray sqlAry = new JSONArray();
@@ -14861,13 +15178,13 @@ public class trans_ora_manager {
 				// 디버깅용
 				utilm.debug_sql(qrybuf, setting);
 	
-				Connection con = getOraConnect();
-				PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+				con = getOraConnect();
+				stmt = con.prepareStatement(qrybuf.toString());
 				for (int k = 0; k < setting.size(); k++) {
-					pstm.setString((k + 1), setting.get(k));
+					stmt.setString((k + 1), setting.get(k));
 				}
 	
-				ResultSet rs = pstm.executeQuery(); 
+				rs = stmt.executeQuery(); 
 	
 				int icnt = 1;
 				long total = 0;
@@ -14949,7 +15266,7 @@ public class trans_ora_manager {
 			} catch(Exception e){
 				e.printStackTrace();
 			} finally {
-				setOraClose();
+				setOraClose(con,stmt,rs);
 			}
 	
 			return sqlobj.toJSONString();
@@ -14960,6 +15277,9 @@ public class trans_ora_manager {
 				String eadd_date, String sadd_recp, String eadd_recp, String appno, String pid, String pcd,
 				String depcd, String auth01, String auth02, String auth03, String card01, String card02, String card03,
 				String card04, String card05) {
+			Connection con2 = null;
+			PreparedStatement stmt2 = null;
+			ResultSet rs2 = null;
 
 			StringBuffer qrybuf = new StringBuffer();
 			StringBuffer wherebuf = new StringBuffer();
@@ -15052,26 +15372,30 @@ public class trans_ora_manager {
 				//디버깅용
 				utilm.debug_sql(qrybuf, setting);
 
-				Connection con2 = getOraConnect();
-				PreparedStatement stmt2 = con2.prepareStatement(qrybuf.toString());
+				con2 = getOraConnect();
+				stmt2 = con2.prepareStatement(qrybuf.toString());
 				for(int k = 0; k<setting.size(); k++) {
 					stmt2.setString((k+1), setting.get(k));
 				}
-				ResultSet rs2 = stmt2.executeQuery();
+				rs2 = stmt2.executeQuery();
 				
 				rs2.next();
 
 				icnt = rs2.getString("MCNT");
 			} catch(Exception e){
-				setOraClose();
+				e.printStackTrace();
 			} finally {
-				setOraClose();
+				setOraClose(con,stmt,rs);
 			}
 			return icnt;
 		}
 
 		public String get_json_0301item_ban(String tuser, String stime, String etime, String acqcd, String depcd,
 				String mid) {
+			Connection con = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			
 			StringBuffer qrybuf = new StringBuffer();
 			StringBuffer wherebuf = new StringBuffer();
 
@@ -15187,7 +15511,7 @@ public class trans_ora_manager {
 				qrybuf.append("         , CASE WHEN SUM(EXP_AMT) IS NULL THEN 0 ELSE SUM(EXP_AMT) END BANK_AMT ");
 				qrybuf.append("     FROM  ");
 				qrybuf.append("         TB_MNG_BANKDATA ");
-				qrybuf.append(" 		WHERE MID IS NOT NULL ");
+				qrybuf.append(" 		WHERE MID IS NOT NULL AND NOT REGEXP_LIKE( exp_amt,'[A-Za-z]|[가-힛]|') AND exp_amt != ''");
 				qrybuf.append("     GROUP BY EXP_DD, MID ");
 				qrybuf.append(" )T2 ON(T1.MID=T2.MID AND T1.EXP_DD=T2.EXP_DD) ");
 				
@@ -15215,12 +15539,12 @@ public class trans_ora_manager {
 				//디버깅용
 				utilm.debug_sql(qrybuf, preSet);
 
-				Connection con = getOraConnect();
-				PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+				con = getOraConnect();
+				stmt = con.prepareStatement(qrybuf.toString());
 				for(int k = 0; k < preSet.size(); k++) {
-					pstm.setString((k+1), preSet.get(k));
+					stmt.setString((k+1), preSet.get(k));
 				}
-				ResultSet rs = pstm.executeQuery();
+				rs = stmt.executeQuery();
 
 				int rows = 1;
 
@@ -15241,8 +15565,8 @@ public class trans_ora_manager {
 					int i_cnt = Integer.parseInt(utilm.checkNumberData(rs.getString("I_CNT")));
 					int i_ban = Integer.parseInt(utilm.checkNumberData(rs.getString("I_BAN")));
 					long i_amt  = Long.parseLong(utilm.checkNumberData(rs.getString("I_AMT")));
-					long i_fee  = Long.parseLong(utilm.checkNumberData(rs.getString("I_FEE")));
-					long i_exp  = Long.parseLong(utilm.checkNumberData(rs.getString("I_EXP")));
+					long i_fee  = Long.parseLong(utilm.checkNumberData(rs.getDouble("I_FEE")));
+					long i_exp  = Long.parseLong(utilm.checkNumberData(rs.getDouble("I_EXP")));
 
 					long bank_amt = Long.parseLong(utilm.checkNumberData(rs.getString("BANK_AMT")));
 
@@ -15318,14 +15642,18 @@ public class trans_ora_manager {
 				sqlobj.put("rows", objAry);
 
 			} catch(Exception e){
-				setOraClose();
+				e.printStackTrace();
 			} finally {
-				setOraClose();
+				setOraClose(con,stmt,rs);
 			}
 			return sqlobj.toJSONString();
 		}
 
 		public int get_deposit_checkup(String tuser, String seqno, String dpflag) {
+			Connection con = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			
 			int result = 0;
 			StringBuffer qrybuf = new StringBuffer();
 			ArrayList<String> setting = new ArrayList<>();
@@ -15336,11 +15664,12 @@ public class trans_ora_manager {
 				
 				if(dpflag.equals("true")) {
 					qrybuf.append("SELECT COUNT(1) MCNT FROM "+userexp[5]+" WHERE SEQNO=?");
-					Connection con = getOraConnect();
-					PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
-					pstm.setString(1, seqno);
+					con = getOraConnect();
+					con.setAutoCommit(false);
+					stmt = con.prepareStatement(qrybuf.toString());
+					stmt.setString(1, seqno);
 
-					ResultSet rs = pstm.executeQuery();
+					rs = stmt.executeQuery();
 					int seqCh = 0;
 					while(rs.next()) {
 						seqCh = Integer.parseInt(rs.getString("MCNT"));
@@ -15348,33 +15677,33 @@ public class trans_ora_manager {
 					
 					if(seqCh>0) {
 						qrybuf = new StringBuffer();
-						qrybuf.append("BEGIN update "+userexp[5]+" set tran_stat='RV01' where seqno=?; COMMIT; END;  ");
+						qrybuf.append(" update "+userexp[5]+" set tran_stat='RV01' where seqno=? ");
 
-						pstm = con.prepareStatement(qrybuf.toString());
-						pstm.setString(1, seqno);
+						stmt = con.prepareStatement(qrybuf.toString());
+						stmt.setString(1, seqno);
 						
-						result = pstm.executeUpdate();
+						result = stmt.executeUpdate();
 					}else {
 					
 						qrybuf = new StringBuffer();
-						qrybuf.append("BEGIN INSERT INTO TB_HIS_TRANS VALUES (?, ?, ?, "+userexp[5]+", 'TRAN_STAT', 'TR00', 'RV01', SYSDATE); COMMIT; END; ");
+						qrybuf.append("INSERT INTO TB_HIS_TRANS VALUES (?, ?, ?, "+userexp[5]+", 'TRAN_STAT', 'TR00', 'RV01', SYSDATE) ");
 	
-						pstm = con.prepareStatement(qrybuf.toString());
-						pstm.setString(1, seqno);
-						pstm.setString(2, userexp[1]);
-						pstm.setString(3, userexp[0]);	
+						stmt = con.prepareStatement(qrybuf.toString());
+						stmt.setString(1, seqno);
+						stmt.setString(2, userexp[1]);
+						stmt.setString(3, userexp[0]);	
 						
-						result = pstm.executeUpdate();
+						result = stmt.executeUpdate();
 					}
 				}else{
 					qrybuf = new StringBuffer();
 					qrybuf.append("SELECT COUNT(1) MCNT FROM "+userexp[5]+" WHERE SEQNO=?");
 					
-					Connection con = getOraConnect();
-					PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
-					pstm.setString(1, seqno);
+					con = getOraConnect();
+					stmt = con.prepareStatement(qrybuf.toString());
+					stmt.setString(1, seqno);
 
-					ResultSet rs = pstm.executeQuery();
+					rs = stmt.executeQuery();
 					int seqCh = 0;
 					
 					while(rs.next()) {
@@ -15384,37 +15713,43 @@ public class trans_ora_manager {
 					if(seqCh>0) {
 						// 매입 보류인 항목은 S로 업데이트 한다.
 						qrybuf = new StringBuffer();
-						qrybuf.append("BEGIN update "+userexp[5]+" set tran_stat='' where seqno=?; COMMIT; END;  ");
+						qrybuf.append(" update "+userexp[5]+" set tran_stat='' where seqno=? ");
 
-						pstm = con.prepareStatement(qrybuf.toString());
-						pstm.setString(1, seqno);
+						stmt = con.prepareStatement(qrybuf.toString());
+						stmt.setString(1, seqno);
 						
-						result = pstm.executeUpdate();
+						result = stmt.executeUpdate();
 					}else {
 
 						qrybuf = new StringBuffer();
-						qrybuf.append("BEGIN INSERT INTO TB_HIS_TRANS VALUES (?, ?, ?, "+userexp[5]+", 'TRAN_STAT', 'RV01', 'TR00', SYSDATE); COMMIT; END; ");
+						qrybuf.append(" INSERT INTO TB_HIS_TRANS VALUES (?, ?, ?, "+userexp[5]+", 'TRAN_STAT', 'RV01', 'TR00', SYSDATE) ");
 	
-						pstm = con.prepareStatement(qrybuf.toString());
-						pstm.setString(1, seqno);
-						pstm.setString(2, userexp[1]);
-						pstm.setString(3, userexp[0]);	
+						stmt = con.prepareStatement(qrybuf.toString());
+						stmt.setString(1, seqno);
+						stmt.setString(2, userexp[1]);
+						stmt.setString(3, userexp[0]);	
 						
-						result = pstm.executeUpdate();
+						result = stmt.executeUpdate();
 					}
 				}
+				con.commit();
 
 			} catch(Exception e){
-				setOraClose();
+				e.printStackTrace();
+				rollBack(con);
+				result = -1;
 			} finally {
-				setOraClose();
+				setOraClose(con,stmt,rs);
 			}
 			return result;
 		}
 		
 		public int get_deposit_request(String tuser, String stime, String etime, String samt, String eamt, String appno, String pid, String tradeidx,
 				String mid, String tid, String acqcd, String depcd, String auth01, String auth02, String auth03, String depreq1, String depreq2, String depreq3) {
-
+			Connection con2 = null;
+			PreparedStatement stmt2 = null;
+			ResultSet rs2 = null;
+			
 			StringBuffer pqrybuf = new StringBuffer();
 
 			int smtsidx = 2;
@@ -15426,7 +15761,7 @@ public class trans_ora_manager {
 				String setdc = "";
 				ArrayList<String> setting = new ArrayList<>();
 
-				pqrybuf.append("BEGIN UPDATE "+userexp[5]+" T1 SET TRAN_STAT='RQ00' WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND MID IN ( ");
+				pqrybuf.append(" UPDATE "+userexp[5]+" T1 SET TRAN_STAT='RQ00' WHERE SVCGB IN ('CC', 'CE') AND AUTHCD='0000' AND MID IN ( ");
 				pqrybuf.append("	SELECT MID FROM TB_BAS_MIDMAP MT1  ");
 				pqrybuf.append("	LEFT OUTER JOIN( ");
 				pqrybuf.append("		SELECT MER_NO, MTYPE FROM TB_BAS_MERINFO WHERE ORG_CD=? AND MTYPE='EDI' ");
@@ -15529,11 +15864,10 @@ public class trans_ora_manager {
 					}
 					pqrybuf.append(" AND T1.APPGB IN (" + utilm.implode(",", imp_auth) + ") ");
 				}
-				
-				pqrybuf.append("; COMMIT; END; ");
 			
-				Connection con2 = getOraConnect();
-				PreparedStatement stmt2 = con2.prepareStatement(pqrybuf.toString());
+				con2 = getOraConnect();
+				con2.setAutoCommit(false);
+				stmt2 = con2.prepareStatement(pqrybuf.toString());
 				
 				stmt2.setString(1, userexp[1]);
 				stmt2.setString(2, userexp[1]);
@@ -15553,17 +15887,19 @@ public class trans_ora_manager {
 					stmt2 = null;
 					pqrybuf = new StringBuffer();
 					
-					pqrybuf.append("BEGIN INSERT INTO TB_HIS_DPREQ_REQ VALUES (?,'0',TO_CHAR(SYSDATE, 'YYYYMMDD'),sysdate,'') ; COMMIT; END; ");
+					pqrybuf.append(" INSERT INTO TB_HIS_DPREQ_REQ VALUES (?,'0',TO_CHAR(SYSDATE, 'YYYYMMDD'),sysdate,'') ");
 
 					stmt2 = con2.prepareStatement(pqrybuf.toString());
 					stmt2.setString(1, userexp[1]);
 					result = stmt2.executeUpdate();
 
 				}
+				con2.commit();
 			} catch(Exception e){
-				setOraClose();
+				e.printStackTrace();
+				result = -1;
 			} finally {
-				setOraClose();
+				setOraClose(con2,stmt2,rs2);
 			}
 			
 			return result;
@@ -15571,6 +15907,10 @@ public class trans_ora_manager {
 //수정해야함
 		public String get_json_0107total(String tuser, String stime, String etime, String samt, String eamt, String appno
 				, String cardtp, String auth01, String auth02, String auth03) {
+			Connection con = null;
+			PreparedStatement stmt = null;
+			ResultSet rs = null;
+			
 			JSONObject sqlobj = new JSONObject();
 			JSONArray sqlAry = new JSONArray();
 
@@ -15770,13 +16110,13 @@ public class trans_ora_manager {
 				// 디버깅용
 				utilm.debug_sql(qrybuf, setting);
 	
-				Connection con = getOraConnect();
-				PreparedStatement pstm = con.prepareStatement(qrybuf.toString());
+				con = getOraConnect();
+				stmt = con.prepareStatement(qrybuf.toString());
 				for (int k = 0; k < setting.size(); k++) {
-					pstm.setString((k + 1), setting.get(k));
+					stmt.setString((k + 1), setting.get(k));
 				}
 	
-				ResultSet rs = pstm.executeQuery(); 
+				rs = stmt.executeQuery(); 
 	
 				int icnt = 1;
 				long total = 0;
@@ -15841,12 +16181,11 @@ public class trans_ora_manager {
 				sqlAry.add(obj1);
 				
 				sqlobj.put("rows", sqlAry);
-				setOraClose();
 				
 			} catch (Exception e) {
-				setOraClose();
+				e.printStackTrace();
 			} finally {
-				setOraClose();
+				setOraClose(con,stmt,rs);
 			}
 	
 			return sqlobj.toJSONString();
