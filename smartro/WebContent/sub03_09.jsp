@@ -162,7 +162,7 @@
 			byId("etime").value = "<%=setTime%>";
 			
 		}
-		/*2014 09 25 유병현추가*/
+
 		$(window).resize(function(){
 			var h = $(document).height();
 			var w = $(document).width();
@@ -174,7 +174,11 @@
 			var hset	= (h-190) + "px";
 			document.getElementById("parentId").style.height = hset;
 		});
-		/*2014 09 25 유병현추가*/
+		
+		function byId(id) {
+			return document.getElementById(id);
+		}
+
 </script>
 <style>
 	span.label {
@@ -298,12 +302,12 @@
 
 			</tr>
 			<tr height="36">
-				<!-- <td>
+				<td>
 					<span class='schtitle'>카드번호</span>
 				</td>
 				<td>
 					<input type='text' name='cardno' id='cardno' class="searchbox_large" value="">
-				</td> -->
+				</td>
 				<td>
 					<span class='schtitle'>거래코드</span>
 				</td>
@@ -499,7 +503,7 @@
 		var auth01	= $('#auth01').val();
 		var auth02	= $('#auth02').val();
 		var auth03	= $('#auth03').val();
-		//var cardno	= $('#cardno').val();
+		var cardno	= $('#cardno').val();
 		var depreq1	= $('#depreq1').val();
 		var depreq2	= $('#depreq2').val();
 		var depreq3	= $('#depreq3').val();
@@ -525,7 +529,7 @@
 		if($("#auth02").prop("checked")){w	+= (auth02!="") ? "&auth02="+auth02 : "";}
 		if($("#auth03").prop("checked")){w	+= (auth03!="") ? "&auth03="+auth03 : "";}
 		
-		//w	+= (cardno!="") ? "&cardno="+cardno : "";
+		w	+= (cardno!="") ? "&cardno="+cardno : "";
 		w	+= (mid!="") ? "&mid="+mid : "";
 		w	+= (tid!="") ? "&tid="+tid : "";
 		w	+= (acqcd!="") ? "&acqcd="+acqcd : "";

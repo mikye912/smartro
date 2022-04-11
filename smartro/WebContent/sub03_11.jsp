@@ -305,6 +305,7 @@
 	accountGrid.setNumberFormat("0,000",9,".",",");
 	accountGrid.setNumberFormat("0,000",10,".",",");
     accountGrid.setNumberFormat("0,000",11,".",",");
+    accountGrid.setNumberFormat("0,000",12,".",",");
     accountGrid.enableColSpan(true);
 	accountGrid.init();
 	

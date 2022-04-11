@@ -44,7 +44,7 @@
 	JSONArray totalAry = (JSONArray)totalObj.get("rows");
 		
 	response.setHeader("Content-Type", "application/vnd.ms-xls");
-	response.setHeader("Content-Disposition", "inline; filename=excel0310_"+setDate.format(nowTime)+".xls");
+	response.setHeader("Content-Disposition", "inline; filename=excel0312_"+setDate.format(nowTime)+".xls");
 %>
 
 <!DOCTYPE HTML>
@@ -130,7 +130,7 @@
 </head>
 <table  style='border-collapse:collapse;table-layout:fixed;width:270pt'>
 	<tr style='mso-height-source:userset;height:20.95pt'>
-		<td class=extxt style='font-size:12pt; font-weight:bold; border-top:none;border-left:none' colspan="5">□ 청구이력조회</td>
+		<td class=extxt style='font-size:12pt; font-weight:bold; border-top:none;border-left:none' colspan="5">□ 청구승인일자기준</td>
 	</TR>
 </table>
 <TABLE><TR><TD HEIGHT="10"></TD></TR></TABLE>
@@ -223,7 +223,7 @@
 		<tr style='mso-height-source:userset;height:15.95pt'>
 			<td class=extxt><%=totalData.get(0)%></td>
 			<td class=extxt><%=totalData.get(1)%></td>
-			<td class=extxt><%=totalData.get(2)%></td>
+			<td class=exnum><%=totalData.get(2)%></td>
 			<td class=exnum><%=totalData.get(3)%></td>
 			<td class=exnum><%=totalData.get(4)%></td>
 			<td class=exnum><%=totalData.get(5)%></td>

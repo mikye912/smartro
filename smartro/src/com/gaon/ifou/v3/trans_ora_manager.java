@@ -5515,12 +5515,12 @@ public class trans_ora_manager {
 			int nWcnt = 0;
 			
 			if(!stime.equals("") && stime != null) {
-				wherebuf.append(" AND EXP_DD >= ? ");
+				wherebuf.append(" AND APP_DD >= ? ");
 				setting.add(stime);
 			}
 
 			if(!etime.equals("") && etime != null) {
-				wherebuf.append(" AND EXP_DD <= ? ");
+				wherebuf.append(" AND APP_DD <= ? ");
 				setting.add(etime);
 			}
 			
@@ -5591,19 +5591,24 @@ public class trans_ora_manager {
 			qrybuf.append(")T3 ON(T2.DEP_CD=T3.DEP_CD) ");
 			qrybuf.append("WHERE T3.DEP_CD  IS NOT NULL ");
 
+			ArrayList<String> preSet = new ArrayList<>();
+			
+			for(int j = 0; j < nWcnt; j++) {
+				for(int k = 0; k < setting.size(); k++) {
+					preSet.add(setting.get(k));
+				}
+			}
 			//디버깅용
-			utilm.debug_sql(qrybuf, setting);
+			utilm.debug_sql(qrybuf, preSet);
 
 			con = getOraConnect();
 			stmt = con.prepareStatement(qrybuf.toString());
-			int cnt = 0;
-			for(int j = 1; j <= nWcnt; j++) {
-				for(int k = 0; k < setting.size(); k++) {
-					stmt.setString((k+j+cnt), setting.get(k));
-				}
-				cnt++;
+			
+			for(int k = 0; k < preSet.size(); k++) {
+				stmt.setString(k+1, preSet.get(k));
 			}
-			System.out.println("multiply : "+cnt);
+			
+
 			
 			rs = stmt.executeQuery();
 			
@@ -5697,6 +5702,7 @@ public class trans_ora_manager {
 		PreparedStatement stmt2 = null;
 		ResultSet rs2 = null;
 		
+		
 		StringBuffer qrybuf = new StringBuffer();
 		StringBuffer wherebuf = new StringBuffer();
 
@@ -5716,18 +5722,18 @@ public class trans_ora_manager {
 			setting.add(userexp[1]);
 			
 			if(!stime.equals("") && stime != null) {
-				wherebuf.append(" AND EXP_DD >= ? ");
+				wherebuf.append(" AND APP_DD >= ? ");
 				setting.add(stime);
 			}
 
 			if(!etime.equals("") && etime != null) {
-				wherebuf.append(" AND EXP_DD <= ? ");
+				wherebuf.append(" AND APP_DD <= ? ");
 				setting.add(etime);
 			}
 			
 			if(!cardno.equals("") && cardno != null) {
 				wherebuf.append(" AND CARD_NO = ? ");
-				setting.add(cardno);
+				setting.add(trans_seed_manager.seed_enc_str(cardno));
 			}
 			if(!appno.equals("") && appno != null) {
 				wherebuf.append(" AND APP_NO = ? ");
@@ -5786,7 +5792,6 @@ public class trans_ora_manager {
 				JSONArray tempAry = new JSONArray();
 				
 				String newCardNo = utilm.cardno_masking(trans_seed_manager.seed_dec_card(rs2.getString("CARD_NO").trim()));
-				
 				tempAry.add(rows);
 				tempAry.add(utilm.setDefault(rs2.getString("TRANTYPE")));
 				tempAry.add(utilm.setDefault(rs2.getString("DEP_CD")));
@@ -10786,7 +10791,7 @@ public class trans_ora_manager {
 			pqrybuf.append(" FROM ");
 			pqrybuf.append(" 	(SELECT ");
 			pqrybuf.append(" 		SUM(GSAMT) GSAMT, SUM(GSCMT) GSCMT, SUM(GSCNT) GSCNT, SUM(SUAMT) SUAMT, SUM(SUCMT) SUCMT, SUM(SUCNT) SUCNT ");
-			pqrybuf.append(" 		,SUM(LAAMT) LAAMT, SUM(LACMT) LACMT, SUM(LACNT) LACNT, DEPOSEQ ,SUBSTR(DEPOSEQ,0,8) REQDATE ");
+			pqrybuf.append(" 		,SUM(LAAMT) LAAMT, SUM(LACMT) LACMT, SUM(LACNT) LACNT, DEPOSEQ ,SUBSTR(DEPOSEQ,1,8) REQDATE ");
 			pqrybuf.append(" 	FROM ");
 			pqrybuf.append(" 		(SELECT ");
 			pqrybuf.append(" 			DEPOSEQ ");
@@ -11127,40 +11132,40 @@ public class trans_ora_manager {
 
 			arr2.add("합계");
 			arr2.add("");
-			arr2.add(TOTKBAA);
 			arr2.add(TOTKBAC);
-			arr2.add(TOTNHAA);
-			arr2.add(TOTNHAC);
-			arr2.add(TOTBCAA);
-			arr2.add(TOTBCAC);
-			arr2.add(TOTSSAA);
-			arr2.add(TOTSSAC);
-			arr2.add(TOTSHAA);
-			arr2.add(TOTSHAC);
-			arr2.add(TOTLDAA);
-			arr2.add(TOTLDAC);
-			arr2.add(TOTHNAA);
-			arr2.add(TOTHNAC);
-			arr2.add(TOTHDAA);
-			arr2.add(TOTHDAC);
-			arr2.add(TOTKBCA);
+			arr2.add(TOTKBAA);
 			arr2.add(TOTKBCC);
-			arr2.add(TOTNHCA);
+			arr2.add(TOTKBCA);
+			arr2.add(TOTNHAC);
+			arr2.add(TOTNHAA);
 			arr2.add(TOTNHCC);
-			arr2.add(TOTBCCA);
-			arr2.add(TOTBCCC);
-			arr2.add(TOTSSCA);
-			arr2.add(TOTSSCC);
-			arr2.add(TOTSHCA);
-			arr2.add(TOTSHCC);
-			arr2.add(TOTLDCA);
+			arr2.add(TOTNHCA);
+			arr2.add(TOTLDAC);
+			arr2.add(TOTLDAA);
 			arr2.add(TOTLDCC);
-			arr2.add(TOTHNCA);
+			arr2.add(TOTLDCA);
+			arr2.add(TOTBCAC);
+			arr2.add(TOTBCAA);
+			arr2.add(TOTBCCC);
+			arr2.add(TOTBCCA);
+			arr2.add(TOTSSAC);
+			arr2.add(TOTSSAA);
+			arr2.add(TOTSSCC);
+			arr2.add(TOTSSCA);
+			arr2.add(TOTSHAC);
+			arr2.add(TOTSHAA);
+			arr2.add(TOTSHCC);
+			arr2.add(TOTSHCA);
+			arr2.add(TOTHNAC);
+			arr2.add(TOTHNAA);
 			arr2.add(TOTHNCC);
-			arr2.add(TOTHDCA);
+			arr2.add(TOTHNCA);
+			arr2.add(TOTHDAC);
+			arr2.add(TOTHDAA);
 			arr2.add(TOTHDCC);
-			arr2.add(TOTAMT);
+			arr2.add(TOTHDCA);
 			arr2.add(TOTCNT);
+			arr2.add(TOTAMT);
 
 			obj1.put("id", "total");
 			obj1.put("data", arr2);

@@ -218,14 +218,12 @@
 					~
 					<input type='text' name='etime' id='etime'  class="searchbox_nomal" onclick="setSens('stime', 'min');" autocomplete="off">
 				</td>								
-				<%-- <td>
+				<td>
 					<span class='schtitle'>사업부</span>
 				</td>
 				<td  colspan='3'>
 					<%=userdepo %>
-				</td> --%>
-				<td></td>
-				<td  colspan='3'></td>
+				</td>
 				<td colspan="2" align="right"><img src='./images/btn/btn_search.gif'  onclick='search_go();' style='cursor:pointer;'></td>
 			</tr>
 			</tbody>

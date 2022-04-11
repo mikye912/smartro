@@ -344,6 +344,22 @@
 	accountGrid.setNumberFormat("0,000",17,".",",");
 	accountGrid.setNumberFormat("0,000",18,".",",");
 	accountGrid.setNumberFormat("0,000",19,".",",");
+	accountGrid.setNumberFormat("0,000",20,".",",");
+	accountGrid.setNumberFormat("0,000",21,".",",");
+	accountGrid.setNumberFormat("0,000",22,".",",");
+	accountGrid.setNumberFormat("0,000",23,".",",");
+	accountGrid.setNumberFormat("0,000",24,".",",");
+	accountGrid.setNumberFormat("0,000",25,".",",");
+	accountGrid.setNumberFormat("0,000",26,".",",");
+	accountGrid.setNumberFormat("0,000",27,".",",");
+	accountGrid.setNumberFormat("0,000",28,".",",");
+	accountGrid.setNumberFormat("0,000",29,".",",");
+	accountGrid.setNumberFormat("0,000",30,".",",");
+	accountGrid.setNumberFormat("0,000",31,".",",");
+	accountGrid.setNumberFormat("0,000",32,".",",");
+	accountGrid.setNumberFormat("0,000",33,".",",");
+	accountGrid.setNumberFormat("0,000",34,".",",");
+	accountGrid.setNumberFormat("0,000",35,".",",");
     accountGrid.enableColSpan(true);
 	accountGrid.init();
 	
@@ -353,7 +369,7 @@
 		var count=accountGrid.getRowsNum();
 		$('#grid_total_rows').html(count);
 		
-		accountGrid.setColspan("total",0,3);
+		accountGrid.setColspan("total",0,2);
 		
 		accountGrid.setRowTextStyle("total", "text-align:right;font-weight:bold;background-color:#f3fafe;color:#006699;border:1px solid #ffffff;");
 		accountGrid.setCellTextStyle("total",0,"text-align:center;font-weight:bold;background-color:#f3fafe;color:#006699;border:1px solid #ffffff;");
