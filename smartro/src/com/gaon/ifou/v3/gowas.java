@@ -469,6 +469,41 @@ public class gowas {
 		return rtnjson;
 	}
 	
+	//반송사유조회-집계
+	@SuppressWarnings("unchecked")
+	public String get_json_0205_total(String tuser, String stime, String etime, String cardno, String appno) {
+		String rtnstr = "";
+		try {
+			rtnstr = ocim.get_json_0205total(tuser, stime, etime, cardno, appno);
+		} catch (Exception e) {}
+		return rtnstr;
+	}
+	
+	//반송사유조회-상세
+	@SuppressWarnings("unchecked")
+	public String get_json_0205_item(String tuser, String stime, String etime, String cardno, String appno) {
+		String rtnstr = "";
+		try {
+			rtnstr = ocim.get_json_0205item(tuser, stime, etime, cardno, appno);
+		} catch (Exception e) {}
+		return rtnstr;
+	}
+	
+	//반송사유조회-엑셀
+	@SuppressWarnings("unchecked")
+	public String get_0205_excel(String tuser, String stime, String etime, String cardno, String appno) {
+		JSONObject exceljson = new JSONObject();
+		//Encoder encoder = Base64.getEncoder();
+		try {
+			exceljson.put("RST", "S000");
+			exceljson.put("TOTALARRAY", ocim.get_json_0205total(tuser, stime, etime, cardno, appno));
+			exceljson.put("ITEMARRAY", ocim.get_json_0205item(tuser, stime, etime, cardno, appno));
+		} catch (Exception e) {
+			
+		}
+		return exceljson.toJSONString();
+		}
+	
 	//2021.02.23 강원대병원v3 - 현금영수증 거래내역상세보기
 	@SuppressWarnings("unchecked")
 	public String get_detail_0211(String seqno, String tuser, String appno) {

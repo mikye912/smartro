@@ -53,7 +53,7 @@
 		var h = $(window).height();
 		var w = $(window).width();
 
-		var hset	= (h-130) + "px";
+		var hset	= (h-150) + "px";
 		
 		document.getElementById("parentId").style.height = hset;
 		AccLayout.setSizes();
@@ -188,7 +188,7 @@
 			</tr>
 		</table>
 	</div>
-	<div id="parentId" style="position: relative; top: 0px; left: 0px; width: 100%; height:130px;"></div>
+	<div id="parentId" style="position: relative; top: 0px; left: 0px; width: 100%; height:200px;"></div>
 </div>
 <script type="text/javascript">
 	var filterVal = "", filterIdx="";
@@ -200,7 +200,7 @@
 	totalGrid = AccLayout.cells("a").attachGrid();
 	var tfields  = "순번,매장코드,매장명,반송건수,반송금액,승인취소매출접수";
 		tfields += ",당일승인/취소,원매출 승인취소,원매출없음,비씨,농협";
-		tfields += "국민,삼성,하나,롯데,현대,신한";
+		tfields += ",국민,삼성,하나,롯데,현대,신한";
     var taligns	 = "center,left,left,right,right";
 		taligns	+= ",right,right,right,right,right";
 		taligns	+= ",right,right,right,right,right,right";
@@ -237,9 +237,9 @@ var aligns	 = "center,center,center,center,left";
 	aligns	+= ",center,center,center,center,center";
 	aligns	+= ",right,right,center,center,center,center,center";
 
-var colTypes  = "ed,ed,ed,ed,ed";
-	colTypes += ",ed,ed,ed,ed,ed";
-	colTypes += ",ed,ed,ed,ed,ed,ed,ed";
+var colTypes  = "ro,ro,ro,ro,ro";
+	colTypes += ",ro,ro,ro,ro,ro";
+	colTypes += ",ron,ro,ro,ro,ro,ro,ro";
 	
 var sorts	 = "int,str,str,str,str";
 	sorts	+= ",str,str,str,str,str";

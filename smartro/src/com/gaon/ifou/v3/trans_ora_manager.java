@@ -5491,6 +5491,340 @@ public class trans_ora_manager {
 		}
 		return icnt;
 	}
+	
+	public String get_json_0205total(String tuser, String stime, String etime, String cardno, String appno) {
+		Connection con = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
+		StringBuffer qrybuf = new StringBuffer();
+		StringBuffer wherebuf = new StringBuffer();
+		
+		JSONObject jrtnobj = new JSONObject();
+		JSONArray arr = new JSONArray();
+
+		
+
+		try {
+			//tuser, stime, etime, acqcd, depcd, mid
+			//tuser split
+			String[] userexp = tuser.split(":");
+
+			ArrayList<String> setting = new ArrayList<>();
+			
+			int nWcnt = 0;
+			
+			if(!stime.equals("") && stime != null) {
+				wherebuf.append(" AND EXP_DD >= ? ");
+				setting.add(stime);
+			}
+
+			if(!etime.equals("") && etime != null) {
+				wherebuf.append(" AND EXP_DD <= ? ");
+				setting.add(etime);
+			}
+			
+			if(!cardno.equals("") && cardno != null) {
+				wherebuf.append(" AND CARD_NO = ? ");
+				setting.add(cardno);
+			}
+			if(!appno.equals("") && appno != null) {
+				wherebuf.append(" AND APP_NO = ? ");
+				setting.add(appno);
+			}
+
+			qrybuf.append("SELECT ");
+			qrybuf.append("	T3.DEP_CD DEPCD ");
+			qrybuf.append("    , DEP_NM ");
+			qrybuf.append("    , TID ");
+			qrybuf.append("    , BCNT ");
+			qrybuf.append("    , BAMT ");
+			qrybuf.append("    , BAN01 ");
+			qrybuf.append("    , BAN02 ");
+			qrybuf.append("    , BAN03 ");
+			qrybuf.append("    , (SELECT AMOUNT FROM(SELECT TID, MID, SUM(SALE_AMT) AMOUNT FROM TB_MNG_DEPDATA WHERE (RSC_CD!='00' AND RSC_CD!='0000') "+wherebuf.toString()+" GROUP BY TID, MID)S1 LEFT OUTER JOIN(SELECT MER_NO, PUR_CD FROM TB_BAS_MERINFO)S2 ON(S1.MID=S2.MER_NO) LEFT OUTER JOIN( SELECT PUR_CD, PUR_KOCES ACC_CD FROM TB_BAS_PURINFO)S3 ON(S2.PUR_CD=S3.PUR_CD) WHERE T1.TID=S1.TID AND ACC_CD='1106') BC ");
+			if(!wherebuf.equals("") && wherebuf != null) nWcnt++;
+			qrybuf.append("    , (SELECT AMOUNT FROM(SELECT TID, MID, SUM(SALE_AMT) AMOUNT FROM TB_MNG_DEPDATA WHERE (RSC_CD!='00' AND RSC_CD!='0000') "+wherebuf.toString()+" GROUP BY TID, MID)S1 LEFT OUTER JOIN(SELECT MER_NO, PUR_CD FROM TB_BAS_MERINFO)S2 ON(S1.MID=S2.MER_NO) LEFT OUTER JOIN( SELECT PUR_CD, PUR_KOCES ACC_CD FROM TB_BAS_PURINFO)S3 ON(S2.PUR_CD=S3.PUR_CD) WHERE T1.TID=S1.TID AND ACC_CD='2211') NH ");
+			if(!wherebuf.equals("") && wherebuf != null) nWcnt++;
+			qrybuf.append("    , (SELECT AMOUNT FROM(SELECT TID, MID, SUM(SALE_AMT) AMOUNT FROM TB_MNG_DEPDATA WHERE (RSC_CD!='00' AND RSC_CD!='0000') "+wherebuf.toString()+" GROUP BY TID, MID)S1 LEFT OUTER JOIN(SELECT MER_NO, PUR_CD FROM TB_BAS_MERINFO)S2 ON(S1.MID=S2.MER_NO) LEFT OUTER JOIN( SELECT PUR_CD, PUR_KOCES ACC_CD FROM TB_BAS_PURINFO)S3 ON(S2.PUR_CD=S3.PUR_CD) WHERE T1.TID=S1.TID AND ACC_CD='1101') KB ");
+			if(!wherebuf.equals("") && wherebuf != null) nWcnt++;
+			qrybuf.append("    , (SELECT AMOUNT FROM(SELECT TID, MID, SUM(SALE_AMT) AMOUNT FROM TB_MNG_DEPDATA WHERE (RSC_CD!='00' AND RSC_CD!='0000') "+wherebuf.toString()+" GROUP BY TID, MID)S1 LEFT OUTER JOIN(SELECT MER_NO, PUR_CD FROM TB_BAS_MERINFO)S2 ON(S1.MID=S2.MER_NO) LEFT OUTER JOIN( SELECT PUR_CD, PUR_KOCES ACC_CD FROM TB_BAS_PURINFO)S3 ON(S2.PUR_CD=S3.PUR_CD) WHERE T1.TID=S1.TID AND ACC_CD='1104') SS ");
+			if(!wherebuf.equals("") && wherebuf != null) nWcnt++;
+			qrybuf.append("    , (SELECT AMOUNT FROM(SELECT TID, MID, SUM(SALE_AMT) AMOUNT FROM TB_MNG_DEPDATA WHERE (RSC_CD!='00' AND RSC_CD!='0000') "+wherebuf.toString()+" GROUP BY TID, MID)S1 LEFT OUTER JOIN(SELECT MER_NO, PUR_CD FROM TB_BAS_MERINFO)S2 ON(S1.MID=S2.MER_NO) LEFT OUTER JOIN( SELECT PUR_CD, PUR_KOCES ACC_CD FROM TB_BAS_PURINFO)S3 ON(S2.PUR_CD=S3.PUR_CD) WHERE T1.TID=S1.TID AND ACC_CD='1105') HN ");
+			if(!wherebuf.equals("") && wherebuf != null) nWcnt++;
+			qrybuf.append("    , (SELECT AMOUNT FROM(SELECT TID, MID, SUM(SALE_AMT) AMOUNT FROM TB_MNG_DEPDATA WHERE (RSC_CD!='00' AND RSC_CD!='0000') "+wherebuf.toString()+" GROUP BY TID, MID)S1 LEFT OUTER JOIN(SELECT MER_NO, PUR_CD FROM TB_BAS_MERINFO)S2 ON(S1.MID=S2.MER_NO) LEFT OUTER JOIN( SELECT PUR_CD, PUR_KOCES ACC_CD FROM TB_BAS_PURINFO)S3 ON(S2.PUR_CD=S3.PUR_CD) WHERE T1.TID=S1.TID AND ACC_CD='1103') LO ");
+			if(!wherebuf.equals("") && wherebuf != null) nWcnt++;
+			qrybuf.append("    , (SELECT AMOUNT FROM(SELECT TID, MID, SUM(SALE_AMT) AMOUNT FROM TB_MNG_DEPDATA WHERE (RSC_CD!='00' AND RSC_CD!='0000') "+wherebuf.toString()+" GROUP BY TID, MID)S1 LEFT OUTER JOIN(SELECT MER_NO, PUR_CD FROM TB_BAS_MERINFO)S2 ON(S1.MID=S2.MER_NO) LEFT OUTER JOIN( SELECT PUR_CD, PUR_KOCES ACC_CD FROM TB_BAS_PURINFO)S3 ON(S2.PUR_CD=S3.PUR_CD) WHERE T1.TID=S1.TID AND ACC_CD='1102') HD ");
+			if(!wherebuf.equals("") && wherebuf != null) nWcnt++;
+			qrybuf.append("    , (SELECT AMOUNT FROM(SELECT TID, MID, SUM(SALE_AMT) AMOUNT FROM TB_MNG_DEPDATA WHERE (RSC_CD!='00' AND RSC_CD!='0000') "+wherebuf.toString()+" GROUP BY TID, MID)S1 LEFT OUTER JOIN(SELECT MER_NO, PUR_CD FROM TB_BAS_MERINFO)S2 ON(S1.MID=S2.MER_NO) LEFT OUTER JOIN( SELECT PUR_CD, PUR_KOCES ACC_CD FROM TB_BAS_PURINFO)S3 ON(S2.PUR_CD=S3.PUR_CD) WHERE T1.TID=S1.TID AND ACC_CD='1107') SI ");
+			if(!wherebuf.equals("") && wherebuf != null) nWcnt++;
+			qrybuf.append("FROM(     ");
+			qrybuf.append("    SELECT ");
+			qrybuf.append("        TID ");
+			qrybuf.append("        , SUM(BCNT) BCNT ");
+			qrybuf.append("        , SUM(BAMT) BAMT ");
+			qrybuf.append("        , SUM(BAN01) BAN01 ");
+			qrybuf.append("        , SUM(BAN02) BAN02 ");
+			qrybuf.append("        , SUM(BAN03) BAN03 ");
+			qrybuf.append("    FROM(     ");
+			qrybuf.append("        SELECT ");
+			qrybuf.append("            TID ");
+			qrybuf.append("            , CASE WHEN RSC_CD NOT IN('00', '0000') THEN COUNT(1) ELSE 0 END BCNT ");
+			qrybuf.append("            , CASE WHEN RSC_CD NOT IN('00', '0000') THEN SUM(SALE_AMT) ELSE 0 END BAMT  ");
+			qrybuf.append("            , CASE WHEN TRIM(RSC_CD)='OA39' THEN COUNT(1) ELSE 0 END BAN01 ");
+			qrybuf.append("            , CASE WHEN TRIM(RSC_CD)='403' THEN COUNT(1) ELSE 0 END BAN02 ");
+			qrybuf.append("            , CASE WHEN TRIM(RSC_CD)='OH07' THEN COUNT(1) ELSE 0 END BAN03 ");
+			qrybuf.append("        FROM ");
+			qrybuf.append("             "+userexp[6]);
+			qrybuf.append("        WHERE RTN_CD IN ('64', '61') ");
+			qrybuf.append(wherebuf.toString());
+			if(!wherebuf.equals("") && wherebuf != null) nWcnt++;
+			qrybuf.append("        GROUP BY TID, RSC_CD       ");
+			qrybuf.append("    ) ");
+			qrybuf.append("    GROUP BY TID ");
+			qrybuf.append(")T1 ");
+			qrybuf.append("LEFT OUTER JOIN( ");
+			qrybuf.append("    SELECT TERM_ID, DEP_CD FROM TB_BAS_TIDMST ");
+			qrybuf.append(")T2 ON(T1.TID=T2.TERM_ID) ");
+			qrybuf.append("LEFT OUTER JOIN( ");
+			qrybuf.append("    SELECT DEP_CD, DEP_NM FROM TB_BAS_DEPART ");
+			qrybuf.append(")T3 ON(T2.DEP_CD=T3.DEP_CD) ");
+			qrybuf.append("WHERE T3.DEP_CD  IS NOT NULL ");
+
+			//디버깅용
+			utilm.debug_sql(qrybuf, setting);
+
+			con = getOraConnect();
+			stmt = con.prepareStatement(qrybuf.toString());
+			int cnt = 0;
+			for(int j = 1; j <= nWcnt; j++) {
+				for(int k = 0; k < setting.size(); k++) {
+					stmt.setString((k+j+cnt), setting.get(k));
+				}
+				cnt++;
+			}
+			System.out.println("multiply : "+cnt);
+			
+			rs = stmt.executeQuery();
+			
+			int icnt = 1;
+			
+			long bcnt = 0, bamt = 0, ban01 = 0, ban02 = 0, ban03 = 0, bctot = 0, nhtot=0, kbtot = 0, sstot = 0, hntot = 0, lotot = 0, hdtot = 0, sitot = 0;
+					
+			while(rs.next()) {
+				JSONObject obj1 = new JSONObject();
+				JSONArray arr2 = new JSONArray();
+				
+				bcnt	+=  Integer.parseInt(rs.getString("BCNT"));
+				bamt	+=  Integer.parseInt(rs.getString("BAMT"));
+				ban01	+=  Integer.parseInt(rs.getString("BAN01"));
+				ban02	+=  Integer.parseInt(rs.getString("BAN02"));
+				ban03	+=  Integer.parseInt(rs.getString("BAN03"));
+				bctot	+=  Integer.parseInt(rs.getString("BC"));
+				nhtot	+=  Integer.parseInt(rs.getString("NH"));
+				kbtot	+=  Integer.parseInt(rs.getString("KB"));
+				sstot	+=  Integer.parseInt(rs.getString("SS"));
+				hntot	+=  Integer.parseInt(rs.getString("HN"));
+				lotot	+=  Integer.parseInt(rs.getString("LO"));
+				hdtot	+=  Integer.parseInt(rs.getString("HD"));
+				sitot	+=  Integer.parseInt(rs.getString("SI"));
+				
+				arr2.add(icnt);
+				arr2.add(rs.getString("DEPCD"));
+				arr2.add(rs.getString("DEP_NM"));
+				arr2.add(rs.getString("BCNT"));
+				arr2.add(rs.getString("BAMT"));
+				arr2.add(rs.getString("BAN01"));
+				arr2.add(rs.getString("BAN02"));
+				arr2.add(rs.getString("BAN03"));
+				arr2.add("");
+				arr2.add(rs.getString("BC"));
+				arr2.add(rs.getString("NH"));
+				arr2.add(rs.getString("KB"));
+				arr2.add(rs.getString("SS"));
+				arr2.add(rs.getString("HN"));
+				arr2.add(rs.getString("LO"));
+				arr2.add(rs.getString("HD"));
+				arr2.add(rs.getString("SI"));
+
+				obj1.put("id", Integer.toString(icnt));
+				obj1.put("data", arr2);
+
+				arr.add(obj1);
+				icnt++;
+			}
+			
+			JSONObject obj1 = new JSONObject();
+			JSONArray arr2 = new JSONArray();
+			
+			arr2.add("합계");
+			arr2.add("");
+			arr2.add("");
+			arr2.add(bcnt);
+			arr2.add(bamt);
+			arr2.add(ban01);
+			arr2.add(ban02);
+			arr2.add(ban03);
+			arr2.add("");
+			arr2.add(bctot);
+			arr2.add(nhtot);
+			arr2.add(kbtot);
+			arr2.add(sstot);
+			arr2.add(hntot);
+			arr2.add(lotot);
+			arr2.add(hdtot);
+			arr2.add(sitot);
+			
+			obj1.put("id", "total");
+			obj1.put("data", arr2);
+			
+			arr.add(0, obj1);
+
+			jrtnobj.put("rows", arr);
+
+		} catch(Exception e){
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+
+		return jrtnobj.toJSONString();
+
+	}
+	
+	public String get_json_0205item(String tuser, String stime, String etime, String cardno, String appno) {
+		Connection con2 = null;
+		PreparedStatement stmt2 = null;
+		ResultSet rs2 = null;
+		
+		StringBuffer qrybuf = new StringBuffer();
+		StringBuffer wherebuf = new StringBuffer();
+
+		//2021.03.02 수정 :: DEPTOT-ACQ_CD가 없어요...
+		StringBuffer acqcdBuf = new StringBuffer();
+
+		JSONObject sqlobj = new JSONObject();
+		JSONArray objAry = new JSONArray();
+
+		try {
+			//tuser split
+			String[] userexp = tuser.split(":");
+			//검색항목에 따른 where 조건절 setting 관련 변수
+			ArrayList<String> setting = new ArrayList<>();
+			
+			wherebuf.append(" WHERE (T1.RTN_CD='61' OR T1.RTN_CD='64') AND T1.MID IN (SELECT MID FROM TB_BAS_MIDMAP WHERE ORG_CD = ? ) ");
+			setting.add(userexp[1]);
+			
+			if(!stime.equals("") && stime != null) {
+				wherebuf.append(" AND EXP_DD >= ? ");
+				setting.add(stime);
+			}
+
+			if(!etime.equals("") && etime != null) {
+				wherebuf.append(" AND EXP_DD <= ? ");
+				setting.add(etime);
+			}
+			
+			if(!cardno.equals("") && cardno != null) {
+				wherebuf.append(" AND CARD_NO = ? ");
+				setting.add(cardno);
+			}
+			if(!appno.equals("") && appno != null) {
+				wherebuf.append(" AND APP_NO = ? ");
+				setting.add(appno);
+			}
+			
+			qrybuf.append("SELECT ");
+			qrybuf.append("    CASE ");
+			qrybuf.append("        WHEN RTN_CD='61' THEN '승인반송' ");
+			qrybuf.append("        WHEN RTN_CD='64' THEN '취소반송' ");
+			qrybuf.append("    END TRANTYPE, ");
+			qrybuf.append("    T2.DEP_CD, ");
+			qrybuf.append("    T3.DEP_NM, ");
+			qrybuf.append("    RSC_CD, ");
+			qrybuf.append("    RS_MSG, ");
+			qrybuf.append("    T1.TID, ");
+			qrybuf.append("    T1.MID, ");
+			qrybuf.append("    CARD_NO, ");
+			qrybuf.append("    T5.PUR_NM, ");
+			qrybuf.append("    SALE_AMT, ");
+			qrybuf.append("    HALBU, ");
+			qrybuf.append("    APP_DD, ");
+			qrybuf.append("    APP_NO, ");
+			qrybuf.append("    REQ_DD ");
+			qrybuf.append("FROM  ");
+			qrybuf.append("    TB_MNG_DEPDATA T1 ");
+			qrybuf.append("LEFT OUTER JOIN( ");
+			qrybuf.append("    SELECT TERM_ID, DEP_CD FROM TB_BAS_TIDMST ");
+			qrybuf.append(")T2 ON(T1.TID=T2.TERM_ID) ");
+			qrybuf.append("LEFT OUTER JOIN( ");
+			qrybuf.append("    SELECT DEP_CD, DEP_NM  FROM TB_BAS_DEPART ");
+			qrybuf.append(")T3 ON(T2.DEP_CD=T3.DEP_CD) ");
+			qrybuf.append("LEFT OUTER JOIN( ");
+			qrybuf.append("    SELECT MER_NO, PUR_CD FROM TB_BAS_MERINFO ");
+			qrybuf.append(")T4 ON(T1.MID=T4.MER_NO) ");
+			qrybuf.append("LEFT OUTER JOIN( ");
+			qrybuf.append("    SELECT PUR_NM, PUR_CD FROM TB_BAS_PURINFO ");
+			qrybuf.append(")T5 ON(T4.PUR_CD=T5.PUR_CD) ");
+			qrybuf.append(wherebuf.toString());
+
+			//디버깅용
+			utilm.debug_sql(qrybuf, setting);
+
+			con2 = getOraConnect();
+			stmt2 = con2.prepareStatement(qrybuf.toString());
+			for(int k = 0; k < setting.size(); k++) {
+				stmt2.setString((k+1), setting.get(k));
+			}
+			rs2 = stmt2.executeQuery();
+
+			int rows = 1;
+
+			while(rs2.next()) {
+				 
+				JSONObject tempObj = new JSONObject();
+				JSONArray tempAry = new JSONArray();
+				
+				String newCardNo = utilm.cardno_masking(trans_seed_manager.seed_dec_card(rs2.getString("CARD_NO").trim()));
+				
+				tempAry.add(rows);
+				tempAry.add(utilm.setDefault(rs2.getString("TRANTYPE")));
+				tempAry.add(utilm.setDefault(rs2.getString("DEP_CD")));
+				tempAry.add(utilm.setDefault(rs2.getString("DEP_NM")));
+				tempAry.add(utilm.setDefault(rs2.getString("RSC_CD")));
+				tempAry.add(utilm.setDefault(rs2.getString("RS_MSG")));
+				tempAry.add(utilm.setDefault(rs2.getString("TID")));
+				tempAry.add(utilm.setDefault(rs2.getString("MID")));
+				tempAry.add(utilm.setDefault(newCardNo));
+				tempAry.add(utilm.setDefault(rs2.getString("PUR_NM")));
+				tempAry.add(utilm.checkNumberData(rs2.getString("SALE_AMT")));
+				tempAry.add(utilm.setDefault(rs2.getString("HALBU")));
+				tempAry.add(utilm.str_to_dateformat_deposit(rs2.getString("APP_DD")));
+				tempAry.add(utilm.setDefault(rs2.getString("APP_NO")));
+				tempAry.add(utilm.setDefault(rs2.getString("REQ_DD")));
+				tempAry.add("");
+				tempAry.add("");
+
+				tempObj.put("id", rows);
+				tempObj.put("data", tempAry);
+
+				objAry.add(tempObj);
+
+				rows++;
+			}
+
+			sqlobj.put("rows", objAry);
+
+		} catch(Exception e){
+			e.printStackTrace();
+		} finally {
+			setOraClose(con,stmt,rs);
+		}
+
+		return sqlobj.toJSONString();
+	}
+	
+	
 
 	//2021.02.23 강원대병원v3 - 현금영수증 거래내역상세보기
 	@SuppressWarnings("unchecked")
